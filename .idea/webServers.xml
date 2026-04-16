@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="0010b3cd-6a50-4c93-928b-9fcb641aea12" name="HETZNER" url="http://fitness-app.s2310456005.student.kwmhgb.at/">
+        <fileTransfer rootFolder="/usr/home/lpbjzw/public_html/fitness-app26/fitnessappServer" accessType="SFTP" host="s2310456005.student.kwmhgb.at" port="222" sshConfigId="35b0f2ad-3409-4081-a11a-948260bb9aef" sshConfig="lpbjzw@s2310456005.student.kwmhgb.at:222 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
