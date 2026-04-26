@@ -37,7 +37,7 @@ class BookingsTableSeeder extends Seeder
 
         if ($course1) {
             $appointment1 = Appointment::where('course_id', $course1->id)
-                ->where('starts_at', '2026-05-05 09:00:00')
+                ->where('starts_at', '2026-06-05 09:00:00')
                 ->first();
 
             if ($appointment1) {
@@ -60,7 +60,7 @@ class BookingsTableSeeder extends Seeder
 
         if ($course2) {
             $appointment2 = Appointment::where('course_id', $course2->id)
-                ->where('starts_at', '2026-05-06 18:00:00')
+                ->where('starts_at', '2026-06-06 18:00:00')
                 ->first();
 
             if ($appointment2) {
