@@ -18,9 +18,13 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'firstname',
+        'lastname',
         'email',
         'password',
+        'role',
+        'info',
+        'phone',
     ];
 
     /**
@@ -41,5 +45,22 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'is_trainer' => 'boolean',
     ];
+
+    /**
+     * A trainer can own many courses.
+     */
+    public function courses(): HasMany
+    {
+        return $this->hasMany(Course::class, 'trainer_id');
+    }
+
+    /**
+     * A participant can have many bookings.
+     */
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class);
+    }
 }
