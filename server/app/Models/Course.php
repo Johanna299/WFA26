@@ -35,7 +35,7 @@ class Course extends Model
      */
     public function difficultyLevel(): BelongsTo
     {
-        return $this->belongsTo(DifficultyLevel::class);
+        return $this->belongsTo(Difficulty::class);
     }
 
     /**
