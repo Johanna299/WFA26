@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\CourseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,3 +27,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('courses', [CourseController::class, 'index']);
 //get one course
 Route::get('courses/{course}', [CourseController::class, 'show']);
+
+//--------------------------------------------------------------------------
+// Routes for appointments
+//--------------------------------------------------------------------------
+//get all courses (slug .../api/appointments)
+Route::get('appointments', [AppointmentController::class, 'index']);
+//get one appointment
+Route::get('appointments/{appointment}', [AppointmentController::class, 'show']);
+//new appointment
+Route::post('appointments', [AppointmentController::class, 'save']);
+//update appointment
+Route::put('appointments/{appointment}', [AppointmentController::class, 'update']);
+//delete appointment
+Route::delete('appointments/{appointment}', [AppointmentController::class, 'delete']);
