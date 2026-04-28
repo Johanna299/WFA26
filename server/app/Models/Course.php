@@ -33,7 +33,7 @@ class Course extends Model
     /**
      * A course belongs to one difficulty level.
      */
-    public function difficultyLevel(): BelongsTo
+    public function difficulty(): BelongsTo
     {
         return $this->belongsTo(Difficulty::class);
     }
