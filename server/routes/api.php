@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CourseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -44,3 +45,13 @@ Route::post('appointments', [AppointmentController::class, 'save']);
 Route::put('appointments/{appointment}', [AppointmentController::class, 'update']);
 //delete appointment
 Route::delete('appointments/{appointment}', [AppointmentController::class, 'delete']);
+
+//--------------------------------------------------------------------------
+// Routes for bookings
+//--------------------------------------------------------------------------
+//get all courses (slug .../api/bookings)
+Route::get('bookings', [BookingController::class, 'index']);
+Route::get('bookings/{booking}', [BookingController::class, 'show']);
+Route::post('bookings', [BookingController::class, 'save']);
+Route::put('bookings/{booking}/cancel', [BookingController::class, 'cancel']);
+Route::delete('bookings/{booking}', [BookingController::class, 'delete']);

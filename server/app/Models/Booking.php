@@ -14,7 +14,6 @@ class Booking extends Model
         'user_id',
         'appointment_id',
         'status',
-        'cancelled_at',
     ];
 
     /**
