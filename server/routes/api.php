@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\DifficultyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -55,3 +57,23 @@ Route::get('bookings/{booking}', [BookingController::class, 'show']);
 Route::post('bookings', [BookingController::class, 'save']);
 Route::put('bookings/{booking}/cancel', [BookingController::class, 'cancel']);
 Route::delete('bookings/{booking}', [BookingController::class, 'delete']);
+
+//--------------------------------------------------------------------------
+// Routes for categories
+//--------------------------------------------------------------------------
+//get all courses (slug .../api/categories)
+Route::get('categories', [CategoryController::class, 'index']);
+Route::get('categories/{category}', [CategoryController::class, 'show']);
+Route::post('categories', [CategoryController::class, 'save']);
+Route::put('categories/{category}', [CategoryController::class, 'update']);
+Route::delete('categories/{category}', [CategoryController::class, 'delete']);
+
+//--------------------------------------------------------------------------
+// Routes for difficulties
+//--------------------------------------------------------------------------
+//get all courses (slug .../api/difficulties)
+Route::get('difficulties', [DifficultyController::class, 'index']);
+Route::get('difficulties/{difficulty}', [DifficultyController::class, 'show']);
+Route::post('difficulties', [DifficultyController::class, 'save']);
+Route::put('difficulties/{difficulty}', [DifficultyController::class, 'update']);
+Route::delete('difficulties/{difficulty}', [DifficultyController::class, 'delete']);
