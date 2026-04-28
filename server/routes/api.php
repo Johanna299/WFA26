@@ -27,6 +27,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('courses', [CourseController::class, 'index']);
 //get one course
 Route::get('courses/{course}', [CourseController::class, 'show']);
+Route::post('courses', [CourseController::class, 'save']);
+Route::put('courses/{course}', [CourseController::class, 'update']);
+Route::delete('courses/{course}', [CourseController::class, 'delete']);
 
 //--------------------------------------------------------------------------
 // Routes for appointments

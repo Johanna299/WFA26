@@ -17,7 +17,6 @@ class Course extends Model
         'description',
         'location',
         'participant_limit',
-        'status',
         'trainer_id',
         'difficulty_id',
     ];
