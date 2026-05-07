@@ -88,6 +88,14 @@ class CategoryController extends Controller
      */
     public function delete(Category $category): JsonResponse
     {
+        // Prevent deleting a category that still has courses assigned to it.
+        if ($category->courses()->exists()) {
+            return response()->json(
+                'category cannot be deleted because courses still exist',
+                422
+            );
+        }
+
         // No transaction is needed here because only a single category record is deleted.
         $category->delete();
 

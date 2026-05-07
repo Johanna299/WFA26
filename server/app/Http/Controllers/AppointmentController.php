@@ -79,6 +79,14 @@ class AppointmentController extends Controller
             'status' => 'sometimes|required|in:scheduled,cancelled,finished',
         ]);
 
+        // Prevent editing appointments that have already started or are in the past.
+        if ($appointment->starts_at <= now()) {
+            return response()->json(
+                'appointment cannot be updated because it has already started or is in the past',
+                422
+            );
+        }
+
         if ($request->has('course_id')) {
             $appointment->course_id = $request->course_id;
         }
@@ -110,6 +118,22 @@ class AppointmentController extends Controller
      */
     public function delete(Appointment $appointment): JsonResponse
     {
+        // Prevent deleting appointments that have already started or are in the past.
+        if ($appointment->starts_at <= now()) {
+            return response()->json(
+                'appointment cannot be deleted because it has already started or is in the past',
+                422
+            );
+        }
+
+        // Prevent deleting a appointment that still has bookings assigned to it.
+        if ($appointment->bookings()->exists()) {
+            return response()->json(
+                'appointment cannot be deleted because bookings still exist',
+                422
+            );
+        }
+
         $appointment->delete();
 
         return response()->json('appointment successfully deleted', 200);

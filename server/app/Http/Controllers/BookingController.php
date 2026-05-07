@@ -122,6 +122,14 @@ class BookingController extends Controller
                 return response()->json('booking is already cancelled', 422);
             }
 
+            // Prevent cancelling a booking if the appointment has already started or is in the past.
+            if ($booking->appointment->starts_at <= now()) {
+                return response()->json(
+                    'booking cannot be cancelled because the appointment has already started or is in the past',
+                    422
+                );
+            }
+
             // cancel the booking and save the updated booking status to the database.
             $booking->status = 'cancelled';
             $booking->save();

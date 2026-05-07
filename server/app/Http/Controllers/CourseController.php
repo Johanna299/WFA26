@@ -171,6 +171,14 @@ class CourseController extends Controller
      */
     public function delete(Course $course): JsonResponse
     {
+        // Prevent deleting a course that still has appointments assigned to it.
+        if ($course->appointments()->exists()) {
+            return response()->json(
+                'course cannot be deleted because appointments still exist',
+                422
+            );
+        }
+
         $course->delete();
 
         return response()->json('course successfully deleted', 200);

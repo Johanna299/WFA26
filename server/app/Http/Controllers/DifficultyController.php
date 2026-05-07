@@ -88,6 +88,14 @@ class DifficultyController extends Controller
      */
     public function delete(Difficulty $difficulty): JsonResponse
     {
+        // Prevent deleting a difficulty that is still assigned to courses.
+        if ($difficulty->courses()->exists()) {
+            return response()->json(
+                'difficulty cannot be deleted because courses still exist',
+                422
+            );
+        }
+
         // No transaction is needed here because only a single difficulty record is deleted.
         $difficulty->delete();
 
