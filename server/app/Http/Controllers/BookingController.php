@@ -63,7 +63,6 @@ class BookingController extends Controller
             // Check whether the user already has an active booking for this appointment.
             $alreadyBooked = Booking::where('user_id', $request->user_id)
                 ->where('appointment_id', $request->appointment_id)
-                ->where('status', 'booked')
                 ->exists();
 
             // Prevent duplicate bookings for the same user and appointment.
