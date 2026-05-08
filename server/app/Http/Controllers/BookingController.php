@@ -15,11 +15,29 @@ class BookingController extends Controller
      */
     public function index(): JsonResponse
     {
-        // Eager load related models because relationships are not included automatically.
-        $bookings = Booking::with([
-            'user',
-            'appointment',
-        ])->get();
+        $user = auth()->user();
+
+        // Trainers can view bookings for appointments that belong to their own courses.
+        if ($this->isTrainer()) {
+            // Eager load related models because relationships are not included automatically.
+            $bookings = Booking::with([
+                'user',
+                'appointment.course',
+            ])
+                ->whereHas('appointment.course', function ($query) use ($user) {
+                    $query->where('trainer_id', $user->id);
+                })
+                ->get();
+        } else {
+            // Participants can only view their own bookings.
+            // Eager load related models because relationships are not included automatically.
+            $bookings = Booking::with([
+                'user',
+                'appointment',
+            ])
+                ->where('user_id', $user->id)
+                ->get();
+        }
 
         return response()->json($bookings, 200);
     }
@@ -29,6 +47,10 @@ class BookingController extends Controller
      */
     public function show(Booking $booking): JsonResponse
     {
+        if (!$this->canAccessBooking($booking)) {
+            return response()->json('you are not allowed to access this booking', 403);
+        }
+
         // Eager load related models because relationships are not included automatically.
         $booking->load([
             'user',
@@ -43,8 +65,12 @@ class BookingController extends Controller
      */
     public function save(Request $request): JsonResponse
     {
+        // Only participants are allowed to create bookings.
+        if ($this->isTrainer()) {
+            return response()->json('trainers cannot create bookings', 403);
+        }
+
         $request->validate([
-            'user_id' => 'required|exists:users,id',
             'appointment_id' => 'required|exists:appointments,id',
         ]);
 
@@ -61,13 +87,13 @@ class BookingController extends Controller
             }
 
             // Check whether the user already has an active booking for this appointment.
-            $alreadyBooked = Booking::where('user_id', $request->user_id)
+            $alreadyBooked = Booking::where('user_id', auth()->id())
                 ->where('appointment_id', $request->appointment_id)
                 ->exists();
 
             // Prevent duplicate bookings for the same user and appointment.
             if ($alreadyBooked) {
-                return response()->json('booking failed: user already booked this appointment', 422);
+                return response()->json('booking failed: user already has a booking for this appointment', 422);
             }
 
             // Count how many active bookings already exist for the selected appointment.
@@ -87,8 +113,8 @@ class BookingController extends Controller
             $booking = new Booking();
             $booking->status = 'booked';
 
-            // Assign the participant and appointment to the booking via their belongsTo relations.
-            $booking->user()->associate($request->user_id);
+            // Link the booking to the currently authenticated participant and the selected appointment.
+            $booking->user()->associate(auth()->user());
             $booking->appointment()->associate($appointment);
             // Save the new booking to the database.
             $booking->save();
@@ -112,6 +138,11 @@ class BookingController extends Controller
      */
     public function cancel(Booking $booking): JsonResponse
     {
+        // Only the participant who owns the booking can cancel it.
+        if ($booking->user_id !== auth()->id()) {
+            return response()->json('you are not allowed to cancel this booking', 403);
+        }
+
         // Start a transaction so the booking status change is only stored if the whole operation succeeds.
         DB::beginTransaction();
 
@@ -153,9 +184,30 @@ class BookingController extends Controller
      */
     public function delete(Booking $booking): JsonResponse
     {
+        // Only the participant who owns the booking can delete it.
+        if ($booking->user_id !== auth()->id()) {
+            return response()->json('you are not allowed to delete this booking', 403);
+        }
+
         // No transaction is needed here because only a single booking record is deleted.
         $booking->delete();
 
         return response()->json('booking successfully deleted', 200);
+    }
+
+    private function canAccessBooking(Booking $booking): bool
+    {
+        // Trainers may access bookings that belong to appointments of their own courses.
+        if ($this->isTrainer()) {
+            return $booking->appointment->course->trainer_id === auth()->id();
+        }
+
+        // Participants may only access their own bookings.
+        return $booking->user_id === auth()->id();
+    }
+
+    private function isTrainer(): bool
+    {
+        return auth()->user()->is_trainer;
     }
 }

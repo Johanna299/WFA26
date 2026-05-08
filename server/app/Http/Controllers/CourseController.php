@@ -46,13 +46,17 @@ class CourseController extends Controller
      */
     public function save(Request $request): JsonResponse
     {
+        // Only trainers are allowed to create courses.
+        if (!$this->isTrainer()) {
+            return response()->json('only trainers can create courses', 403);
+        }
+
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'location' => 'required|string|max:255',
             'participant_limit' => 'required|integer|min:1',
             'difficulty_id' => 'required|exists:difficulties,id',
-            'trainer_id' => 'required|exists:users,id',
             // A course must have at least one category so it can be filtered
             'category_ids' => 'required|array|min:1',
             'category_ids.*' => 'exists:categories,id',
@@ -70,15 +74,13 @@ class CourseController extends Controller
             $course->difficulty_id = $request->difficulty_id;
 
             // Inverse relation -> use associate for the trainer relation:
-            // Assign the selected trainer to the course by setting the trainer_id foreign key.
-            $course->trainer()->associate($request->trainer_id);
+            // Assign the currently authenticated trainer to the new course.
+            $course->trainer()->associate(auth()->user());
             $course->save();
 
             // Sync the course categories in the pivot table so the course
             // is linked to exactly these category IDs.
-            if ($request->has('category_ids') && is_array($request->category_ids)) {
-                $course->categories()->sync($request->category_ids);
-            }
+            $course->categories()->sync($request->category_ids);
 
             DB::commit();
 
@@ -102,13 +104,22 @@ class CourseController extends Controller
      */
     public function update(Request $request, Course $course): JsonResponse
     {
+        // Only trainers are allowed to update courses.
+        if (!$this->isTrainer()) {
+            return response()->json('only trainers can update courses', 403);
+        }
+
+        // Trainers may only update their own courses.
+        if (!$this->ownsCourse($course)) {
+            return response()->json('you are not allowed to update this course', 403);
+        }
+
         $request->validate([
             'title' => 'sometimes|required|string|max:255',
             'description' => 'nullable|string',
             'location' => 'sometimes|required|string|max:255',
             'participant_limit' => 'sometimes|required|integer|min:1',
             'difficulty_id' => 'sometimes|required|exists:difficulties,id',
-            'trainer_id' => 'sometimes|required|exists:users,id',
             // If categories are updated, at least one category must remain assigned to the course.
             'category_ids' => 'sometimes|required|array|min:1',
             'category_ids.*' => 'exists:categories,id',
@@ -136,11 +147,6 @@ class CourseController extends Controller
 
             if ($request->has('difficulty_id')) {
                 $course->difficulty_id = $request->difficulty_id;
-            }
-
-            if ($request->has('trainer_id')) {
-                // Inverse relation -> use associate for the trainer relation.
-                $course->trainer()->associate($request->trainer_id);
             }
 
             $course->save();
@@ -171,6 +177,16 @@ class CourseController extends Controller
      */
     public function delete(Course $course): JsonResponse
     {
+        // Only trainers are allowed to delete courses.
+        if (!auth()->user()->is_trainer) {
+            return response()->json('only trainers can delete courses', 403);
+        }
+
+        // Trainers may only delete their own courses.
+        if ($course->trainer_id !== auth()->id()) {
+            return response()->json('you are not allowed to delete this course', 403);
+        }
+
         // Prevent deleting a course that still has appointments assigned to it.
         if ($course->appointments()->exists()) {
             return response()->json(
@@ -182,5 +198,15 @@ class CourseController extends Controller
         $course->delete();
 
         return response()->json('course successfully deleted', 200);
+    }
+
+    private function isTrainer(): bool
+    {
+        return auth()->user()->is_trainer;
+    }
+
+    private function ownsCourse(Course $course): bool
+    {
+        return $course->trainer_id === auth()->id();
     }
 }

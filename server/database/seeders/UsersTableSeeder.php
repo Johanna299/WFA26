@@ -13,7 +13,7 @@ class UsersTableSeeder extends Seeder
     public function run(): void
     {
         User::firstOrCreate(
-            ['email' => 'trainer@example.com'],
+            ['email' => 'trainer1@example.com'],
             [
                 'firstname' => 'Tina',
                 'lastname' => 'Trainer',
@@ -25,9 +25,33 @@ class UsersTableSeeder extends Seeder
         );
 
         User::firstOrCreate(
-            ['email' => 'participant@example.com'],
+            ['email' => 'participant1@example.com'],
             [
                 'firstname' => 'Paul',
+                'lastname' => 'Participant',
+                'password' => bcrypt('secret123'),
+                'is_trainer' => false,
+                'info' => null,
+                'phone' => null,
+            ]
+        );
+
+        User::firstOrCreate(
+            ['email' => 'trainer2@example.com'],
+            [
+                'firstname' => 'Tim',
+                'lastname' => 'Trainer',
+                'password' => bcrypt('secret123'),
+                'is_trainer' => true,
+                'info' => 'Certified fitness trainer',
+                'phone' => '+43123456789',
+            ]
+        );
+
+        User::firstOrCreate(
+            ['email' => 'participant2@example.com'],
+            [
+                'firstname' => 'Petra',
                 'lastname' => 'Participant',
                 'password' => bcrypt('secret123'),
                 'is_trainer' => false,

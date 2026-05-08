@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
+use App\Models\Course;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -41,6 +42,10 @@ class AppointmentController extends Controller
      */
     public function save(Request $request): JsonResponse
     {
+        // Only trainers are allowed to create appointments.
+        if (!$this->isTrainer()) {
+            return response()->json('only trainers can create appointments', 403);
+        }
         // No transaction needed because only a single appointment record is written.
         $request->validate([
             //course_id is required and must reference an existing course
@@ -48,6 +53,13 @@ class AppointmentController extends Controller
             'starts_at' => 'required|date',
             'duration' => 'required|integer|min:1',
         ]);
+
+        $course = Course::find($request->course_id);
+
+        // Trainers may only create appointments for their own courses.
+        if (!$this->ownsCourse($course)) {
+            return response()->json('you are not allowed to create appointments for this course', 403);
+        }
 
         $appointment = new Appointment();
         $appointment->course_id = $request->course_id;
@@ -70,6 +82,16 @@ class AppointmentController extends Controller
      */
     public function update(Request $request, Appointment $appointment): JsonResponse
     {
+        // Only trainers are allowed to update appointments.
+        if (!$this->isTrainer()) {
+            return response()->json('only trainers can update appointments', 403);
+        }
+
+        // Trainers may only update appointments of their own courses.
+        if (!$this->ownsAppointment($appointment)) {
+            return response()->json('you are not allowed to update this appointment', 403);
+        }
+
         // No transaction needed because only a single appointment record is updated.
         $request->validate([
             //'sometimes' means the field is only validated if it is present in the request
@@ -118,6 +140,16 @@ class AppointmentController extends Controller
      */
     public function delete(Appointment $appointment): JsonResponse
     {
+        // Only trainers are allowed to delete appointments.
+        if (!$this->isTrainer()) {
+            return response()->json('only trainers can delete appointments', 403);
+        }
+
+        // Trainers may only delete appointments of their own courses.
+        if (!$this->ownsAppointment($appointment)) {
+            return response()->json('you are not allowed to delete this appointment', 403);
+        }
+
         // Prevent deleting appointments that have already started or are in the past.
         if ($appointment->starts_at <= now()) {
             return response()->json(
@@ -137,5 +169,20 @@ class AppointmentController extends Controller
         $appointment->delete();
 
         return response()->json('appointment successfully deleted', 200);
+    }
+
+    private function isTrainer(): bool
+    {
+        return auth()->user()->is_trainer;
+    }
+
+    private function ownsAppointment(Appointment $appointment): bool
+    {
+        return $appointment->course->trainer_id === auth()->id();
+    }
+
+    private function ownsCourse(Course $course): bool
+    {
+        return $course->trainer_id === auth()->id();
     }
 }

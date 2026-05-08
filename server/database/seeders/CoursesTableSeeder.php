@@ -15,7 +15,9 @@ class CoursesTableSeeder extends Seeder
      */
     public function run(): void
     {
-        $trainer = User::where('email', 'trainer@example.com')->first();
+        $trainer1 = User::where('email', 'trainer1@example.com')->first();
+        $trainer2 = User::where('email', 'trainer2@example.com')->first();
+
         $beginner = Difficulty::where('name', 'beginner')->first();
         $intermediate = Difficulty::where('name', 'intermediate')->first();
 
@@ -23,7 +25,7 @@ class CoursesTableSeeder extends Seeder
         $mobility = Category::where('name', 'Mobility')->first();
         $strength = Category::where('name', 'Strength Training')->first();
 
-        if (!$trainer || !$beginner || !$intermediate) {
+        if (!$trainer1 || !$trainer2 || !$beginner || !$intermediate) {
             return;
         }
 
@@ -38,7 +40,7 @@ class CoursesTableSeeder extends Seeder
             $course1->difficulty_id = $beginner->id;
 
             // Inverse relation -> use associate for the trainer relation.
-            $course1->trainer()->associate($trainer);
+            $course1->trainer()->associate($trainer1);
 
             $course1->save();
         }
@@ -59,7 +61,7 @@ class CoursesTableSeeder extends Seeder
             $course2->difficulty_id = $intermediate->id;
 
             // Inverse relation -> use associate for the trainer relation.
-            $course2->trainer()->associate($trainer);
+            $course2->trainer()->associate($trainer1);
 
             $course2->save();
         }
@@ -67,6 +69,27 @@ class CoursesTableSeeder extends Seeder
         // Attach the given categories to the course without deleting existing category assignments.
         if ($strength) {
             $course2->categories()->syncWithoutDetaching([$strength->id]);
+        }
+
+        $course3 = Course::where('title', 'Evening Mobility Flow')->first();
+
+        if (!$course3) {
+            $course3 = new Course();
+            $course3->title = 'Evening Mobility Flow';
+            $course3->description = 'A mobility-focused course to improve flexibility and posture.';
+            $course3->location = 'Studio B';
+            $course3->participant_limit = 8;
+            $course3->difficulty_id = $beginner->id;
+
+            // Inverse relation -> use associate for the trainer relation.
+            $course3->trainer()->associate($trainer2);
+
+            $course3->save();
+        }
+
+        // Attach the given categories to the course without deleting existing category assignments.
+        if ($mobility) {
+            $course3->categories()->syncWithoutDetaching([$mobility->id]);
         }
     }
 }
