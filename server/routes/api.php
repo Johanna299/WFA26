@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CourseController;
@@ -77,3 +78,11 @@ Route::get('difficulties/{difficulty}', [DifficultyController::class, 'show']);
 Route::post('difficulties', [DifficultyController::class, 'save']);
 Route::put('difficulties/{difficulty}', [DifficultyController::class, 'update']);
 Route::delete('difficulties/{difficulty}', [DifficultyController::class, 'delete']);
+
+//--------------------------------------------------------------------------
+// Routes for authentication
+//--------------------------------------------------------------------------
+Route::post('auth/login', [AuthController::class, 'login']);
+Route::get('auth/me', [AuthController::class, 'me']);
+Route::post('auth/logout', [AuthController::class, 'logout']);
+Route::post('auth/refresh', [AuthController::class, 'refresh']);

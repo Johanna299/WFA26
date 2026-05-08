@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -23,7 +23,7 @@ class User extends Authenticatable
         'lastname',
         'email',
         'password',
-        'role',
+        'is_trainer',
         'info',
         'phone',
     ];
@@ -63,5 +63,27 @@ class User extends Authenticatable
     public function bookings(): HasMany
     {
         return $this->hasMany(Booking::class);
+    }
+
+    /* ---- auth JWT ---- */
+    /**
+     * Return the identifier stored in the JWT subject claim.
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return custom claims that should be added to the JWT.
+     */
+    public function getJWTCustomClaims(): array
+    {
+        return [
+            'user' => [
+                'id' => $this->id,
+                'is_trainer' => $this->is_trainer,
+            ],
+        ];
     }
 }
