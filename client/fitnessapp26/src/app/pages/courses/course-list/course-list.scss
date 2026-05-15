@@ -1,0 +1,142 @@
+/* Main page container with centered layout and responsive side spacing */
+.course-page {
+  padding: 24px 16px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Space below the page heading area */
+.page-header {
+  margin-bottom: 24px;
+}
+
+/* Main page title styling */
+.page-title {
+  margin: 0 0 8px;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* Smaller subtitle text below the title */
+.page-subtitle {
+  margin: 0;
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+/* Card style for the empty state message */
+.empty-card {
+  border-radius: 20px;
+}
+
+/* Responsive grid for the course cards */
+.course-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+/* Basic card styling with rounded corners and hover animation */
+.course-card {
+  border-radius: 20px;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* Slight lift effect when hovering over a card */
+.course-card:hover {
+  transform: translateY(-4px);
+}
+
+/* Inner spacing of the card content */
+.course-card mat-card-content {
+  padding: 20px;
+}
+
+/* Top row with title on the left and difficulty badge on the right */
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+/* Course title styling */
+.course-title {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+/* Pill-style badge for the course difficulty */
+.difficulty-badge {
+  white-space: nowrap;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* Short description text with line clamp for a cleaner card layout */
+.course-description {
+  margin: 0 0 16px;
+  line-height: 1.5;
+  opacity: 0.9;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Flexible row for multiple category badges */
+.category-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+/* Pill-style badge for one category */
+.category-badge {
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* Footer area aligned to the right side of the card */
+.card-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Highlight the detail link text */
+.details-link {
+  font-weight: 600;
+}
+
+/* Show two columns on medium-sized screens */
+@media (min-width: 700px) {
+  .course-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Show three columns on larger screens and increase horizontal page spacing */
+@media (min-width: 1024px) {
+  .course-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .course-page {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
