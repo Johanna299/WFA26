@@ -1,0 +1,46 @@
+/* Full page section with centered login card */
+.login-page {
+  min-height: calc(100vh - 120px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+}
+
+/* Card-like container for the login form */
+.login-card {
+  width: 100%;
+  max-width: 460px;
+  padding: 28px 24px;
+  border-radius: 24px;
+  background: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* Main login heading */
+.login-title {
+  display: block;
+  margin: 0 0 8px;
+  font-size: 2rem;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+/* Short explanation text below the heading */
+.login-subtitle {
+  margin: 0 0 24px;
+  line-height: 1.5;
+  opacity: 0.8;
+}
+
+/* Vertical layout for the login form fields */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Make form fields use the full card width */
+.login-form mat-form-field {
+  width: 100%;
+}

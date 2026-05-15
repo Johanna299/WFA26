@@ -1,0 +1,61 @@
+<section class="login-page">
+  <mat-card class="login-card">
+    <!-- Login card title -->
+    <mat-card-title class="login-title">Login</mat-card-title>
+
+    <mat-card-content>
+      <!-- Short description -->
+      <p class="login-subtitle">
+        Sign in to manage bookings or course administration.
+      </p>
+
+      <!-- Login form -->
+      <form class="login-form" [formGroup]="loginForm" (ngSubmit)="login()">
+        <!-- Email field -->
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email">
+
+          <!-- Validation message if the email field is empty -->
+          @if (
+            loginForm.get('email')?.hasError('required') &&
+            (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)
+            ) {
+            <mat-error>Email is required.</mat-error>
+          }
+
+          <!-- Validation message if the email format is invalid -->
+          @if (
+            loginForm.get('email')?.hasError('email') &&
+            (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)
+            ) {
+            <mat-error>Please check the email format.</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Password field -->
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input matInput type="password" formControlName="password">
+
+          <!-- Validation message if the password field is empty -->
+          @if (
+            loginForm.get('password')?.invalid &&
+            (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)
+            ) {
+            <mat-error>Password is required.</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Submit button -->
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="loginForm.invalid">
+          Login
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</section>
