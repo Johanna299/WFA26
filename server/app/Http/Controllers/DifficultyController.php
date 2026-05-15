@@ -39,6 +39,11 @@ class DifficultyController extends Controller
      */
     public function save(Request $request): JsonResponse
     {
+        // Only trainers are allowed to manage difficulty levels.
+        if (!$this->isTrainer()) {
+            return response()->json('only trainers can manage difficulty levels', 403);
+        }
+
         // No transaction is needed here because only a single difficulty record is written.
         $request->validate([
             'name' => 'required|string|max:255|unique:difficulties,name',
@@ -61,6 +66,11 @@ class DifficultyController extends Controller
      */
     public function update(Request $request, Difficulty $difficulty): JsonResponse
     {
+        // Only trainers are allowed to manage difficulty levels.
+        if (!$this->isTrainer()) {
+            return response()->json('only trainers can manage difficulty levels', 403);
+        }
+
         // No transaction is needed here because only a single difficulty record is updated.
 
         // Validate the name as unique, but ignore the current difficulty so
@@ -88,6 +98,11 @@ class DifficultyController extends Controller
      */
     public function delete(Difficulty $difficulty): JsonResponse
     {
+        // Only trainers are allowed to manage difficulty levels.
+        if (!$this->isTrainer()) {
+            return response()->json('only trainers can manage difficulty levels', 403);
+        }
+
         // Prevent deleting a difficulty that is still assigned to courses.
         if ($difficulty->courses()->exists()) {
             return response()->json(
@@ -100,5 +115,10 @@ class DifficultyController extends Controller
         $difficulty->delete();
 
         return response()->json('difficulty successfully deleted', 200);
+    }
+
+    private function isTrainer(): bool
+    {
+        return auth()->user()->is_trainer;
     }
 }

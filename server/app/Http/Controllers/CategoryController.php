@@ -39,6 +39,11 @@ class CategoryController extends Controller
      */
     public function save(Request $request): JsonResponse
     {
+        // Only trainers are allowed to manage categories.
+        if (!$this->isTrainer()) {
+            return response()->json('only trainers can manage categories', 403);
+        }
+
         // No transaction is needed here because only a single category record is written.
         $request->validate([
             'name' => 'required|string|max:255|unique:categories,name',
@@ -61,6 +66,11 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category): JsonResponse
     {
+        // Only trainers are allowed to manage categories.
+        if (!$this->isTrainer()) {
+            return response()->json('only trainers can manage categories', 403);
+        }
+
         // No transaction is needed here because only a single category record is updated.
 
         // Validate the name as unique, but ignore the current category so
@@ -88,6 +98,11 @@ class CategoryController extends Controller
      */
     public function delete(Category $category): JsonResponse
     {
+        // Only trainers are allowed to manage categories.
+        if (!$this->isTrainer()) {
+            return response()->json('only trainers can manage categories', 403);
+        }
+
         // Prevent deleting a category that still has courses assigned to it.
         if ($category->courses()->exists()) {
             return response()->json(
@@ -100,5 +115,10 @@ class CategoryController extends Controller
         $category->delete();
 
         return response()->json('category successfully deleted', 200);
+    }
+
+    private function isTrainer(): bool
+    {
+        return auth()->user()->is_trainer;
     }
 }
