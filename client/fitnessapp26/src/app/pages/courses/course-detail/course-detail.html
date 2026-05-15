@@ -1,0 +1,104 @@
+@let c = course();
+
+@if (c) {
+  <section class="course-detail-page">
+    <mat-card class="detail-card">
+      <mat-card-content>
+        <!-- Top section with title and difficulty -->
+        <div class="top-section">
+          <div class="title-block">
+            <h1 class="course-title">{{ c.title }}</h1>
+
+            @if (c.difficulty) {
+              <span class="difficulty-badge">
+                {{ c.difficulty.name }}
+              </span>
+            }
+          </div>
+
+          @if (c.categories && c.categories.length) {
+            <!-- Category badges -->
+            <div class="category-list">
+              @for (category of c.categories; track category.id) {
+                <span class="category-badge">{{ category.name }}</span>
+              }
+            </div>
+          }
+        </div>
+
+        <mat-divider class="divider"></mat-divider>
+
+        <!-- Description -->
+        <section class="detail-section">
+          <h2 class="section-title">Description</h2>
+          <p class="description-text">
+            {{ c.description || 'No description available.' }}
+          </p>
+        </section>
+
+        <mat-divider class="divider"></mat-divider>
+
+        <!-- Course meta data -->
+        <section class="detail-section">
+          <h2 class="section-title">Course information</h2>
+
+          <div class="meta-grid">
+            <div class="meta-item">
+              <span class="meta-label">Location</span>
+              <span class="meta-value">{{ c.location }}</span>
+            </div>
+
+            <div class="meta-item">
+              <span class="meta-label">Participant limit</span>
+              <span class="meta-value">{{ c.participant_limit }}</span>
+            </div>
+
+            @if (c.trainer) {
+              <div class="meta-item">
+                <span class="meta-label">Trainer</span>
+                <span class="meta-value">
+                  {{ c.trainer.firstname }} {{ c.trainer.lastname }}
+                </span>
+              </div>
+            }
+          </div>
+        </section>
+
+        <mat-divider class="divider"></mat-divider>
+
+        <!-- Appointments -->
+        <section class="detail-section">
+          <h2 class="section-title">Appointments</h2>
+
+          @if (c.appointments && c.appointments.length) {
+            <div class="appointment-list">
+              <!-- Use the appointment ID as a stable unique key for efficient DOM updates. -->
+              @for (appointment of c.appointments; track appointment.id) {
+                <div class="appointment-item">
+                  <div class="appointment-main">
+                    <span class="appointment-date">{{ appointment.starts_at }}</span>
+                    <span class="appointment-duration">{{ appointment.duration }} min</span>
+                  </div>
+
+                  <span class="appointment-status">
+                    {{ appointment.status }}
+                  </span>
+                </div>
+              }
+            </div>
+          } @else {
+            <p class="empty-text">No appointments are currently available for this course.</p>
+          }
+        </section>
+
+        <!-- Back button -->
+        <div class="action-row">
+          <button mat-raised-button color="primary" [routerLink]="'/courses'">
+            <mat-icon>arrow_back</mat-icon>
+            Back to course list
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </section>
+}

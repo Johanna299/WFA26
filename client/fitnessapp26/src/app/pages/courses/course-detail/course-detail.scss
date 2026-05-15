@@ -1,0 +1,205 @@
+/* Main page container with centered layout */
+.course-detail-page {
+  padding: 24px 16px 40px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Main detail card */
+.detail-card {
+  border-radius: 24px;
+}
+
+/* Inner spacing of the card content */
+.detail-card mat-card-content {
+  padding: 24px;
+}
+
+/* Top section spacing */
+.top-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Title area */
+.title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Main course title */
+.course-title {
+  margin: 0;
+  font-size: 2rem;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+/* Rounded badge for the difficulty */
+.difficulty-badge {
+  width: fit-content;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* Divider spacing */
+.divider {
+  margin: 24px 0;
+}
+
+/* Generic section spacing */
+.detail-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Section headline */
+.section-title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* Description text */
+.description-text {
+  margin: 0;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+/* Flexible row for category badges */
+.category-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* One category badge */
+.category-badge {
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* Responsive grid for meta information */
+.meta-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+/* One meta information block */
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Label styling for meta data */
+.meta-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+/* Value styling for meta data */
+.meta-value {
+  font-size: 1rem;
+}
+
+/* List of appointments */
+.appointment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* One appointment entry */
+.appointment-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.04);
+}
+
+/* Main appointment information */
+.appointment-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Appointment date styling */
+.appointment-date {
+  font-weight: 600;
+}
+
+/* Appointment duration styling */
+.appointment-duration {
+  font-size: 0.95rem;
+  opacity: 0.75;
+}
+
+/* Appointment status badge */
+.appointment-status {
+  width: fit-content;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* Message shown if no appointments exist */
+.empty-text {
+  margin: 0;
+  opacity: 0.75;
+}
+
+/* Action row for buttons */
+.action-row {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 28px;
+}
+
+/* Two-column layout for larger screens */
+@media (min-width: 768px) {
+  .title-block {
+    align-items: flex-start;
+  }
+
+  .meta-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .appointment-item {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+/* Larger spacing on wide screens */
+@media (min-width: 1024px) {
+  .course-detail-page {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .detail-card mat-card-content {
+    padding: 32px;
+  }
+
+  .course-title {
+    font-size: 2.4rem;
+  }
+}
