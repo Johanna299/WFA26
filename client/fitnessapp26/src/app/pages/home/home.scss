@@ -1,0 +1,30 @@
+/* Full page section with centered content */
+.home-page {
+  min-height: calc(100vh - 120px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+}
+
+/* Main intro container */
+.hero {
+  max-width: 720px;
+  text-align: center;
+}
+
+/* Main page headline */
+.hero-title {
+  margin: 0 0 16px;
+  font-size: 2.5rem;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+/* Intro text below the headline */
+.hero-text {
+  margin: 0 0 24px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  opacity: 0.8;
+}
