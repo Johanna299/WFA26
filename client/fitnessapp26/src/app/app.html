@@ -1,1 +1,69 @@
-<router-outlet></router-outlet>
+<!-- Main navigation bar -->
+<nav mat-tab-nav-bar [tabPanel]="tabPanel">
+  <!-- Public home page -->
+  <a mat-tab-link
+     routerLink="/home"
+     routerLinkActive
+     #rlaHome="routerLinkActive"
+     [active]="rlaHome.isActive">
+    Home
+  </a>
+
+  <!-- Public course overview -->
+  <a mat-tab-link
+     routerLink="/courses"
+     routerLinkActive
+     #rlaCourses="routerLinkActive"
+     [active]="rlaCourses.isActive">
+    Courses
+  </a>
+
+  <!-- Show bookings only for logged-in users -->
+  @if (isLoggedIn()) {
+    <a mat-tab-link
+       routerLink="/bookings"
+       routerLinkActive
+       #rlaBookings="routerLinkActive"
+       [active]="rlaBookings.isActive">
+      My Bookings
+    </a>
+  }
+
+  <!-- Show trainer course administration only for logged-in trainers -->
+  @if (isLoggedIn() && isTrainer()) {
+    <a mat-tab-link
+       routerLink="/trainer/courses"
+       routerLinkActive
+       #rlaTrainerCourses="routerLinkActive"
+       [active]="rlaTrainerCourses.isActive">
+      My Courses
+    </a>
+  }
+
+  <!-- Show login link only if no user is logged in -->
+  @if (!isLoggedIn()) {
+    <a mat-tab-link
+       routerLink="/login"
+       routerLinkActive
+       #rlaLogin="routerLinkActive"
+       [active]="rlaLogin.isActive">
+      Login
+    </a>
+  }
+
+  <!-- Show logout action only if a user is logged in -->
+  @if (isLoggedIn()) {
+    <a mat-tab-link (click)="logout()">
+      Logout
+    </a>
+  }
+</nav>
+
+<!-- Main router content area -->
+<mat-tab-nav-panel #tabPanel>
+  <div class="container">
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</mat-tab-nav-panel>

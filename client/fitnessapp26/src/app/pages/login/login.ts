@@ -40,18 +40,20 @@ export class Login {
     password: ['', Validators.required]
   });
 
-  login(): void {
+  protected login(): void {
     // Get values from form fields.
     const val = this.loginForm.value;
 
     // Only send the request if both form fields contain values.
     if (val.email && val.password) {
       this.authService.login(val.email, val.password).subscribe({
-        next: (response) => {
+        next: (response: any) => {
           console.log('Login successful', response);
 
+          // Store the received JWT token in the browser session.
+          this.authService.setSessionStorage(response.access_token);
+
           // Navigate to the home page after a successful login.
-          // Token handling will be added in the next step.
           this.router.navigateByUrl('/home');
         },
         error: (error) => {

@@ -1,0 +1,18 @@
+/* Outer page container below the navigation */
+.container {
+  padding: 24px 16px;
+}
+
+/* Center the routed page content and limit the maximum width */
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Add a little more horizontal spacing on larger screens */
+@media (min-width: 1024px) {
+  .container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
