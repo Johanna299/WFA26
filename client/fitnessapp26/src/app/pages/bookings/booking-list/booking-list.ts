@@ -6,6 +6,7 @@ import { Booking } from '../../../shared/booking';
 import { BookingStore } from '../../../shared/services/booking-store';
 import { DatePipe } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
   selector: 'fa-booking-list',
@@ -25,6 +26,9 @@ import { MatIcon } from '@angular/material/icon';
 export class BookingList {
   // Use the booking store to load and update bookings.
   private bookingStore = inject(BookingStore);
+
+  // to show user feedback messages for booking actions
+  private toastr = inject(ToastrService);
 
   // Store the currently loaded bookings in a signal, so Angular
   // automatically updates the template whenever the booking data changes
@@ -67,6 +71,7 @@ export class BookingList {
         next: () => {
           // Reload bookings after the cancellation was successful
           this.loadBookings();
+          this.toastr.success('Booking cancelled');
         },
         // cancellation failed
         error: (error) => {

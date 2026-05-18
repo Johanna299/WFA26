@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { switchMap } from 'rxjs';
@@ -11,6 +11,7 @@ import { DatePipe } from '@angular/common';
 import { BookingStore } from '../../../shared/services/booking-store';
 import { Authentication } from '../../../shared/services/authentication';
 import { Appointment } from '../../../shared/appointment';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'fa-course-detail',
@@ -28,7 +29,7 @@ import { Appointment } from '../../../shared/appointment';
   styleUrl: './course-detail.scss'
 })
 
-export class CourseDetail {
+export class CourseDetail implements OnInit{
   // Inject the course store to load one single course from the backend API.
   private cs = inject(CourseStore);
 
@@ -44,6 +45,9 @@ export class CourseDetail {
   // Inject the router to navigate after login checks or successful booking.
   private router = inject(Router);
 
+  // to show user feedback messages for booking actions
+  private toastr = inject(ToastrService);
+
   // Read the current course ID from the active route,
   // load the matching course from the backend,
   // and convert the returned Observable into a signal
@@ -54,6 +58,29 @@ export class CourseDetail {
     ),
     { initialValue: null }
   );
+
+  ngOnInit(): void {
+    // Check whether the page was opened with a booking error message.
+    const bookingError = this.route.snapshot.queryParamMap.get('bookingError');
+
+    if (bookingError === 'trainer-not-allowed') {
+      // Show an error message if a trainer tried to return from login to book a course.
+      this.toastr.error('Booking not allowed as a trainer');
+
+      // Remove the temporary booking error parameter from the URL
+      // so the error message is shown only once.
+      this.router.navigate([], {
+        // Stay on the current route.
+        relativeTo: this.route,
+        // Remove the bookingError query parameter.
+        queryParams: { bookingError: null },
+        // Keep any other existing query parameters unchanged.
+        queryParamsHandling: 'merge',
+        // Replace the current browser history entry instead of adding a new one.
+        replaceUrl: true
+      });
+    }
+  }
 
   /**
    * Return whether a user is currently logged in.
@@ -94,11 +121,13 @@ export class CourseDetail {
    */
   protected bookAppointment(appointmentId: number): void {
     // Redirect unauthenticated users to the login page
-    // and remember the current page as return URL.
+    // and remember the current page plus the booking intent
+    // as query params
     if (!this.isLoggedIn()) {
       this.router.navigate(['/login'], {
         queryParams: {
-          returnUrl: this.router.url
+          returnUrl: this.router.url,
+          bookingIntent: 'true'
         }
       });
       return;
@@ -111,11 +140,27 @@ export class CourseDetail {
 
     this.bookingStore.create(appointmentId).subscribe({
       next: () => {
+        // Show a success message after a successful booking.
+        this.toastr.success('Booking successful');
         // Navigate to the booking overview after a successful booking.
         this.router.navigateByUrl('/bookings');
       },
       error: (error) => {
         console.error('Creating booking failed', error);
+        // Read the backend error message if available.
+        const backendMessage = error?.error;
+
+        // Show an custom error message
+        if (backendMessage === 'booking failed: user already has a booking for this appointment') {
+          this.toastr.error(
+            'You cannot book this appointment again.',
+            'Booking error'
+          );
+          return;
+        }
+
+        // Fallback message for all other booking errors.
+        this.toastr.error('Booking error');
       }
     });
   }

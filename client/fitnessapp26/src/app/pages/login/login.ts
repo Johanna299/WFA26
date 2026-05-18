@@ -59,7 +59,18 @@ export class Login {
           // Read the optional return URL from the query parameters.
           // If no return URL exists, navigate to the home page.
           const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/home';
-          // Navigate back to the originally requested page after login.
+
+          // Read whether the login was triggered by a booking action.
+          const bookingIntent = this.route.snapshot.queryParamMap.get('bookingIntent');
+
+          // If the user tried to book a course but logged in as a trainer,
+          // navigate back to the original page and show a booking error there.
+          if (bookingIntent === 'true' && this.authService.isTrainer()) {
+            this.router.navigateByUrl(`${returnUrl}?bookingError=trainer-not-allowed`);
+            return;
+          }
+
+          // Otherwise navigate back to the originally requested page after login.
           this.router.navigateByUrl(returnUrl);
         },
         error: (error) => {
