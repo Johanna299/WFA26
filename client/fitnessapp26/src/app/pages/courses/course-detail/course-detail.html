@@ -4,6 +4,14 @@
   <section class="course-detail-page">
     <mat-card class="detail-card">
       <mat-card-content>
+        <!-- Back button -->
+        <div class="action-row">
+          <button mat-raised-button color="primary" [routerLink]="'/courses'">
+            <mat-icon>arrow_back</mat-icon>
+            Back to course list
+          </button>
+        </div>
+
         <!-- Top section with title and difficulty -->
         <div class="top-section">
           <div class="title-block">
@@ -76,13 +84,53 @@
               @for (appointment of c.appointments; track appointment.id) {
                 <div class="appointment-item">
                   <div class="appointment-main">
-                    <span class="appointment-date">{{ appointment.starts_at }}</span>
-                    <span class="appointment-duration">{{ appointment.duration }} min</span>
+                    <div class="appointment-details">
+                      <div class="appointment-detail">
+                        <span class="appointment-label">Date: </span>
+                        <!-- Format the raw backend date into a readable date string using Angular's date pipe. -->
+                        <span class="appointment-value">{{ appointment.starts_at | date:'longDate' }}</span>
+                      </div>
+
+                      <div class="appointment-detail">
+                        <span class="appointment-label">Time: </span>
+                        <!-- Format the raw backend date into a readable time string using Angular's date pipe. -->
+                        <span class="appointment-value">{{ appointment.starts_at | date:'HH:mm' }}</span>
+                      </div>
+
+                      <div class="appointment-detail">
+                        <span class="appointment-label">Duration: </span>
+                        <span class="appointment-value">{{ appointment.duration }} min</span>
+                      </div>
+                    </div>
+
+                    <span class="appointment-status">
+                      {{ appointment.status }}
+                    </span>
                   </div>
 
-                  <span class="appointment-status">
-                    {{ appointment.status }}
-                  </span>
+                  <!-- Show the booking button only for logged-in participants and scheduled appointments -->
+                  @if (canBookAppointment(appointment)) {
+                    <button
+                      mat-raised-button
+                      color="primary"
+                      class="book-button"
+                      (click)="bookAppointment(appointment.id)">
+                      <mat-icon>event_available</mat-icon>
+                      Book
+                    </button>
+                  }
+
+                  <!-- Show a login hint button for logged-out users -->
+                  @if (!isLoggedIn() && appointment.status === 'scheduled') {
+                    <button
+                      mat-stroked-button
+                      color="primary"
+                      class="book-button"
+                      (click)="bookAppointment(appointment.id)">
+                      <mat-icon>login</mat-icon>
+                      Log in to book
+                    </button>
+                  }
                 </div>
               }
             </div>
@@ -91,13 +139,6 @@
           }
         </section>
 
-        <!-- Back button -->
-        <div class="action-row">
-          <button mat-raised-button color="primary" [routerLink]="'/courses'">
-            <mat-icon>arrow_back</mat-icon>
-            Back to course list
-          </button>
-        </div>
       </mat-card-content>
     </mat-card>
   </section>

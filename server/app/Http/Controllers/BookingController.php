@@ -33,7 +33,7 @@ class BookingController extends Controller
             // Eager load related models because relationships are not included automatically.
             $bookings = Booking::with([
                 'user',
-                'appointment',
+                'appointment.course',
             ])
                 ->where('user_id', $user->id)
                 ->get();
@@ -54,7 +54,7 @@ class BookingController extends Controller
         // Eager load related models because relationships are not included automatically.
         $booking->load([
             'user',
-            'appointment',
+            'appointment.course',
         ]);
 
         return response()->json($booking, 200);
@@ -123,7 +123,7 @@ class BookingController extends Controller
 
             $booking->load([
                 'user',
-                'appointment',
+                'appointment.course',
             ]);
 
             return response()->json($booking, 201);
@@ -169,7 +169,7 @@ class BookingController extends Controller
             // Eager load related models before returning the updated booking as JSON.
             $booking->load([
                 'user',
-                'appointment',
+                'appointment.course',
             ]);
 
             return response()->json($booking, 200);

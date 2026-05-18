@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
 import { MatButton } from '@angular/material/button';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
@@ -31,6 +31,9 @@ export class Login {
   // Navigate after a successful login.
   private router = inject(Router);
 
+  // Read query parameters from the current login route.
+  private route = inject(ActivatedRoute);
+
   // Use the authentication service to send the login request.
   private authService = inject(Authentication);
 
@@ -53,8 +56,11 @@ export class Login {
           // Store the received JWT token in the browser session.
           this.authService.setSessionStorage(response.access_token);
 
-          // Navigate to the home page after a successful login.
-          this.router.navigateByUrl('/home');
+          // Read the optional return URL from the query parameters.
+          // If no return URL exists, navigate to the home page.
+          const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/home';
+          // Navigate back to the originally requested page after login.
+          this.router.navigateByUrl(returnUrl);
         },
         error: (error) => {
           console.error('Login failed', error);

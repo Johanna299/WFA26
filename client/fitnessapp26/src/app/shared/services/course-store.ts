@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, retry, throwError } from 'rxjs';
 import { Course } from '../course';
+import {API_URL} from '../api';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +10,7 @@ import { Course } from '../course';
 export class CourseStore {
   // Base URL of the Laravel REST API.
   // All course-related requests are built from this URL.
-  private api = 'http://fitness-app.s2310456005.student.kwmhgb.at/api';
+  private api = API_URL;
 
   // Inject Angular's HttpClient to send HTTP requests to the backend.
   http = inject(HttpClient);

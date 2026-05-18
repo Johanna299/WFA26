@@ -1,0 +1,155 @@
+/* Main booking page container */
+.booking-page {
+  padding: 8px 0 24px;
+}
+
+/* Header area above the booking list */
+.page-header {
+  margin-bottom: 24px;
+}
+
+/* Main page title */
+.page-title {
+  margin: 0 0 8px;
+  font-size: 2rem;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+/* Short explanation text below the title */
+.page-subtitle {
+  margin: 0;
+  line-height: 1.5;
+  opacity: 0.8;
+}
+
+/* Empty state card */
+.empty-card {
+  border-radius: 20px;
+}
+
+/* Vertical layout for booking cards */
+.booking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Single booking card */
+.booking-card {
+  border-radius: 20px;
+}
+
+/* Top row with booking info and action button */
+.booking-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+/* Booking headline */
+.booking-title {
+  margin: 0 0 8px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+/* Link styling for the course title */
+.course-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.course-link:hover {
+  text-decoration: underline;
+}
+
+/* Booking status text */
+.booking-status {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0.9;
+}
+
+/* Small badge for the booking status */
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: rgba(25, 118, 210, 0.10);
+  color: #1565c0;
+}
+
+/* Alternative style for cancelled bookings */
+.status-badge.status-cancelled {
+  background: rgba(211, 47, 47, 0.10);
+  color: #c62828;
+}
+
+/* Make the cancel button clearly destructive */
+button.cancel-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #c62828 !important;
+  color: #ffffff !important;
+}
+
+/* Darker red on hover */
+button.cancel-button:hover {
+  background-color: #b71c1c !important;
+}
+
+/* Grid layout for appointment details */
+.booking-details {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+/* One appointment detail block */
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Small label above the detail value */
+.detail-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+/* Main detail value */
+.detail-value {
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+/* Responsive layout for larger screens */
+@media (min-width: 768px) {
+  .booking-details {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* Stack header content on smaller screens */
+@media (max-width: 640px) {
+  .booking-top {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cancel-button {
+    width: 100%;
+    justify-content: center;
+  }
+}

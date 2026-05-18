@@ -1,0 +1,92 @@
+<section class="booking-page">
+  <!-- Page header -->
+  <div class="page-header">
+    <h1 class="page-title">My Bookings</h1>
+    <p class="page-subtitle">
+      Here you can view your current bookings.
+    </p>
+  </div>
+
+  @if (!bookings().length) {
+    <!-- Empty state -->
+    <mat-card class="empty-card">
+      <mat-card-content>
+        You currently have no bookings.
+      </mat-card-content>
+    </mat-card>
+  } @else {
+    <!-- Booking list -->
+    <div class="booking-list">
+      <!-- track: use the booking ID as a key so Angular can update the list efficiently -->
+      @for (booking of bookings(); track booking.id) {
+        <mat-card class="booking-card">
+          <mat-card-content>
+            <div class="booking-top">
+              <div>
+                <!-- Course title with link to the course detail page -->
+                <h2 class="booking-title">
+                  <a
+                    class="course-link"
+                    [routerLink]="['/courses', booking.appointment?.course?.id]">
+                    {{ booking.appointment?.course?.title }}
+                  </a>
+                </h2>
+
+                <!-- Status -->
+                <!-- Add the CSS class 'status-cancelled' only if the booking status is 'cancelled'. -->
+                <p class="booking-status">
+                  Status:
+                  <span class="status-badge" [class.status-cancelled]="booking.status === 'cancelled'">
+                      {{ booking.status }}
+                    </span>
+                </p>
+              </div>
+
+              @if (booking.status === 'booked') {
+                <!-- Let the user cancel an active booking -->
+                <button
+                  mat-raised-button
+                  class="cancel-button"
+                  (click)="cancelBooking(booking.id)">
+                  <mat-icon>cancel</mat-icon>
+                  Cancel
+                </button>
+              }
+            </div>
+
+            @if (booking.appointment) {
+              <!-- Appointment information -->
+              <div class="booking-details">
+                <div class="detail-item">
+                  <span class="detail-label">Date</span>
+                  <span class="detail-value">
+                    <!-- Format the raw backend date into a readable date string using Angular's date pipe. -->
+                      {{ booking.appointment.starts_at | date:'longDate' }}
+                    </span>
+                </div>
+
+                <div class="detail-item">
+                  <span class="detail-label">Time</span>
+                  <span class="detail-value">
+                    <!-- Format the raw backend date into a readable time string using Angular's date pipe. -->
+                      {{ booking.appointment.starts_at | date:'HH:mm' }}
+                    </span>
+                </div>
+
+                <div class="detail-item">
+                  <span class="detail-label">Duration</span>
+                  <span class="detail-value">{{ booking.appointment.duration }} min</span>
+                </div>
+
+                <div class="detail-item">
+                  <span class="detail-label">Appointment status</span>
+                  <span class="detail-value">{{ booking.appointment.status }}</span>
+                </div>
+              </div>
+            }
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  }
+</section>
