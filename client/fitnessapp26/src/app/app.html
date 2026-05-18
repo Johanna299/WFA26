@@ -1,69 +1,77 @@
-<!-- Main navigation bar -->
-<nav mat-tab-nav-bar [tabPanel]="tabPanel">
-  <!-- Public home page -->
-  <a mat-tab-link
-     routerLink="/home"
-     routerLinkActive
-     #rlaHome="routerLinkActive"
-     [active]="rlaHome.isActive">
-    Home
-  </a>
-
-  <!-- Public course overview -->
-  <a mat-tab-link
-     routerLink="/courses"
-     routerLinkActive
-     #rlaCourses="routerLinkActive"
-     [active]="rlaCourses.isActive">
-    Courses
-  </a>
-
-  <!-- Show bookings only for logged-in users -->
-  @if (isLoggedIn()) {
-    <a mat-tab-link
-       routerLink="/bookings"
-       routerLinkActive
-       #rlaBookings="routerLinkActive"
-       [active]="rlaBookings.isActive">
-      My Bookings
+<!-- Main application header -->
+<header class="app-header">
+  <div class="header-inner">
+    <!-- Logo area -->
+    <a class="brand" routerLink="/home">
+      FitFlow
     </a>
-  }
 
-  <!-- Show trainer course administration only for logged-in trainers -->
-  @if (isLoggedIn() && isTrainer()) {
-    <a mat-tab-link
-       routerLink="/trainer/courses"
-       routerLinkActive
-       #rlaTrainerCourses="routerLinkActive"
-       [active]="rlaTrainerCourses.isActive">
-      My Courses
-    </a>
-  }
+    <!-- Main navigation -->
+    <nav class="main-nav">
+      <!-- Home -->
+      <!--add class 'active-link' if this route matches the current URL -->
+      <a
+        routerLink="/home"
+        routerLinkActive="active-link">
+        Home
+      </a>
 
-  <!-- Show login link only if no user is logged in -->
-  @if (!isLoggedIn()) {
-    <a mat-tab-link
-       routerLink="/login"
-       routerLinkActive
-       #rlaLogin="routerLinkActive"
-       [active]="rlaLogin.isActive">
-      Login
-    </a>
-  }
+      <!-- Public course overview -->
+      <a
+        routerLink="/courses"
+        routerLinkActive="active-link">
+        Kurse
+      </a>
 
-  <!-- Show logout action only if a user is logged in -->
-  @if (isLoggedIn()) {
-    <a mat-tab-link (click)="logout()">
-      Logout
-    </a>
-  }
-</nav>
+      <!-- Show participant dashboard only for logged-in participants -->
+      @if (isParticipant()) {
+        <a
+          routerLink="/bookings"
+          routerLinkActive="active-link">
+          Meine Buchungen
+        </a>
+      }
 
-<!-- Main router content area -->
-<mat-tab-nav-panel #tabPanel>
-  <div class="container">
-    <div class="content">
-      <router-outlet></router-outlet>
+      <!-- Show trainer dashboard only for logged-in trainers -->
+      @if (isLoggedIn() && isTrainer()) {
+        <a
+          routerLink="/trainer/courses"
+          routerLinkActive="active-link">
+          Meine Kurse
+        </a>
+      }
+    </nav>
+
+    <!-- Authentication actions -->
+    <div class="header-actions">
+      <!-- Show login icon if no user is logged in -->
+      @if (!isLoggedIn()) {
+        <!-- Navigate to the login page -->
+        <button
+          mat-icon-button
+          routerLink="/login"
+          aria-label="Login">
+          <mat-icon>account_circle</mat-icon>
+        </button>
+      }
+
+      <!-- Show logout icon if a user is logged in -->
+      @if (isLoggedIn()) {
+        <!--Logout when the user clicks this button-->
+        <button
+          mat-icon-button
+          (click)="logout()"
+          aria-label="Logout">
+          <mat-icon>logout</mat-icon>
+        </button>
+      }
     </div>
   </div>
-</mat-tab-nav-panel>
+</header>
+
+<!-- Main routed content -->
+<main class="page-shell">
+  <div class="page-content">
+    <router-outlet></router-outlet>
+  </div>
+</main>

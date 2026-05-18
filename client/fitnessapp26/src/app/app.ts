@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { MatTabLink, MatTabNav, MatTabNavPanel } from '@angular/material/tabs';
 import { Authentication } from './shared/services/authentication';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'fa-root',
@@ -10,9 +11,8 @@ import { Authentication } from './shared/services/authentication';
     RouterOutlet,
     RouterLink,
     RouterLinkActive,
-    MatTabNav,
-    MatTabLink,
-    MatTabNavPanel
+    MatIconButton,
+    MatIcon
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss'
@@ -35,12 +35,19 @@ export class App {
    * Return whether the logged-in user is a trainer.
    */
   protected isTrainer(): boolean {
-    return this.authService.isTrainer();
+    return this.isLoggedIn() && this.authService.isTrainer();
+  }
+
+  /**
+   * Return whether the logged-in user is a participant.
+   */
+  protected isParticipant(): boolean {
+    return this.isLoggedIn() && !this.isTrainer();
   }
 
   /**
    * Ask for confirmation before logging the user out.
-   * If confirmed, clear the current session and navigate to the login page.
+   * Only clear the session if the user confirms the action.
    */
   protected logout(): void {
     const confirmed = confirm('Do you really want to log out?');

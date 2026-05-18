@@ -1,17 +1,125 @@
-/* Outer page container below the navigation */
-.container {
+/* Modern, light header with a soft blue accent */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(25, 118, 210, 0.10);
+}
+
+/* Inner header layout */
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 14px 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+/* Brand link on the left side */
+.brand {
+  color: #1565c0;
+  text-decoration: none;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+/* Main navigation links */
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Default navigation link style */
+.main-nav a {
+  color: #243041;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 999px;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+/* Hover effect for navigation links */
+.main-nav a:hover {
+  background: rgba(25, 118, 210, 0.08);
+  color: #1565c0;
+}
+
+/* Active navigation link */
+.main-nav a.active-link {
+  background: rgba(25, 118, 210, 0.12);
+  color: #1565c0;
+}
+
+/* Right-side area for login/logout actions */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Style header action buttons without a permanent filled background */
+.header-actions button {
+  color: #1565c0;
+  background: transparent;
+  border-radius: 999px;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+/* Add a soft hover effect for action buttons */
+.header-actions button:hover {
+  background: rgba(25, 118, 210, 0.10);
+  transform: translateY(-1px);
+}
+
+/* Spacing around routed page content */
+.page-shell {
   padding: 24px 16px;
 }
 
-/* Center the routed page content and limit the maximum width */
-.content {
+/* Center the page content and limit the width */
+.page-content {
   max-width: 1200px;
   margin: 0 auto;
 }
 
-/* Add a little more horizontal spacing on larger screens */
+/* Responsive header layout for smaller screens */
+@media (max-width: 768px) {
+  .header-inner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .main-nav {
+    width: 100%;
+    gap: 8px;
+  }
+
+  .header-actions {
+    justify-content: flex-end;
+  }
+}
+
+/* Slightly more horizontal spacing on larger screens */
 @media (min-width: 1024px) {
-  .container {
+  .header-inner,
+  .page-shell {
     padding-left: 24px;
     padding-right: 24px;
   }
