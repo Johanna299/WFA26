@@ -1,25 +1,34 @@
 <section class="course-page">
-  <!-- Page header -->
   <div class="page-header">
-    <h1 class="page-title">Courses</h1>
-    <p class="page-subtitle">
-      Explore all available courses and open a course to see details and appointments.
-    </p>
+    <div>
+      <h1 class="page-title">My Courses</h1>
+      <p class="page-subtitle">
+        Here you can manage your own courses.
+      </p>
+    </div>
+
+    <!-- Navigate to the course creation form -->
+    <a
+      mat-raised-button
+      color="primary"
+      routerLink="/trainer/courses/new">
+      Create new course
+    </a>
   </div>
 
-  @if (!courses().length) {
+  @if (!trainerCourses().length) {
     <!-- Empty state -->
     <mat-card class="empty-card">
       <mat-card-content>
-        No courses are currently available.
+        You have not created any courses yet.
       </mat-card-content>
     </mat-card>
   } @else {
     <!-- Course overview grid -->
     <div class="course-grid">
-    <!-- track course.id: Use the course ID as a stable unique key so Angular can update the list efficiently. -->
-      @for (course of courses(); track course.id) {
-        <!-- One course card -->
+      <!-- Track each course by its ID so Angular can recognize list items when the data changes. -->
+      @for (course of trainerCourses(); track course.id) {
+        <!-- The full card opens the public course detail page -->
         <mat-card class="course-card" [routerLink]="['/courses', course.id]">
           <mat-card-content>
             <!-- Title and difficulty -->
@@ -33,7 +42,7 @@
               }
             </div>
 
-            <!-- Short course description -->
+            <!-- Course description -->
             @if (course.description) {
               <p class="course-description">
                 {{ course.description }}
@@ -41,7 +50,7 @@
             }
 
             <!-- Category badges -->
-            @if (course.categories && course.categories.length) {
+            @if (course.categories.length) {
               <div class="category-list">
                 @for (category of course.categories; track category.id) {
                   <span class="category-badge">{{ category.name }}</span>
@@ -49,8 +58,19 @@
               </div>
             }
 
-            <!-- Link hint -->
+            <!-- Footer with trainer action and detail hint -->
             <div class="card-footer">
+              <!-- Prevent card click (detail view) when the edit button is clicked -->
+              <a
+                mat-raised-button
+                color="primary"
+                class="edit-button"
+                [routerLink]="['/trainer/courses', course.id, 'edit']"
+                (click)="$event.stopPropagation()">
+                Edit
+              </a>
+
+              <!-- Visual hint that the card opens the detail page -->
               <span class="details-link">Details</span>
             </div>
           </mat-card-content>
