@@ -9,6 +9,13 @@
         Sign in to manage bookings or course administration.
       </p>
 
+      @if (loginError()) {
+        <!-- Show a visible error message after a failed login attempt -->
+        <p class="login-error-message">
+          {{ loginError() }}
+        </p>
+      }
+
       <!-- Login form -->
       <form class="login-form" [formGroup]="loginForm" (ngSubmit)="login()">
         <!-- Email field -->

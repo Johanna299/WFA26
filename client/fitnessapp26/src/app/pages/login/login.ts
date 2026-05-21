@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
@@ -24,7 +24,7 @@ import { Authentication } from '../../shared/services/authentication';
   templateUrl: './login.html',
   styleUrl: './login.scss'
 })
-export class Login {
+export class Login implements OnInit {
   // Build and manage the reactive login form.
   private fb = inject(FormBuilder);
 
@@ -37,13 +37,30 @@ export class Login {
   // Use the authentication service to send the login request.
   private authService = inject(Authentication);
 
+  // Store visible login error message in a signal
+  // so the template updates automatically
+  protected loginError = signal('');
+
   // Login form with validation rules
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required]
   });
 
+  ngOnInit(): void {
+    // Clear the visible login error message
+    // as soon as the user edits the input field
+    this.loginForm.valueChanges.subscribe(() => {
+      if (this.loginError()) {
+        this.loginError.set('');
+      }
+    });
+  }
+
   protected login(): void {
+    // Clear old login errors before starting a new login attempt.
+    this.loginError.set('');
+
     // Get values from form fields.
     const val = this.loginForm.value;
 
@@ -75,6 +92,13 @@ export class Login {
         },
         error: (error) => {
           console.error('Login failed', error);
+
+          // Show error message if the login data is incorrect
+          if (error.status === 401) {
+            this.loginError.set('Invalid email or password. Please try again.');
+          } else {
+            this.loginError.set('Login failed. Please try again.');
+          }
         }
       });
     }
