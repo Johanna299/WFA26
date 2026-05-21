@@ -46,10 +46,10 @@
     <div class="header-actions">
       <!-- Show login icon if no user is logged in -->
       @if (!isLoggedIn()) {
-        <!-- Navigate to the login page -->
         <button
           mat-icon-button
           routerLink="/login"
+          routerLinkActive="active-icon-button"
           aria-label="Login">
           <mat-icon>account_circle</mat-icon>
         </button>

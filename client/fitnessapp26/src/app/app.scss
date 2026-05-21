@@ -88,6 +88,12 @@
   transform: translateY(-1px);
 }
 
+/* Highlight the login icon button when the login route is active */
+.header-actions button.active-icon-button {
+  color: #1565c0;
+  background: rgba(25, 118, 210, 0.12);
+}
+
 /* Spacing around routed page content */
 .page-shell {
   padding: 24px 16px;
