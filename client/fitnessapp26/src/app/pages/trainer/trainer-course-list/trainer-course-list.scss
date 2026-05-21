@@ -136,6 +136,34 @@
   z-index: 1;
 }
 
+/* Group the trainer action buttons inside the card footer */
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Style the delete action as a soft destructive button */
+.delete-button {
+  position: relative;
+  z-index: 1;
+
+  background-color: rgba(198, 40, 40, 0.10) !important;
+  color: #c62828 !important;
+  border: 1px solid rgba(198, 40, 40, 0.25) !important;
+  box-shadow: none !important;
+}
+
+/* Keep the inner Material label red as well */
+.delete-button .mdc-button__label {
+  color: #c62828 !important;
+}
+
+.delete-button:hover {
+  background-color: rgba(198, 40, 40, 0.16) !important;
+  border-color: rgba(198, 40, 40, 0.35) !important;
+}
+
 /* Subtle detail hint inside the card */
 .details-link {
   font-size: 0.88rem;
@@ -188,5 +216,18 @@
 
   .details-link {
     text-align: right;
+  }
+
+  .card-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .card-actions a,
+  .card-actions button {
+    width: 100%;
+    text-align: center;
   }
 }

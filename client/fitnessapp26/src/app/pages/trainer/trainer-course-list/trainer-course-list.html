@@ -58,17 +58,28 @@
               </div>
             }
 
-            <!-- Footer with trainer action and detail hint -->
+            <!-- Footer with trainer actions and detail hint -->
             <div class="card-footer">
-              <!-- Prevent card click (detail view) when the edit button is clicked -->
-              <a
-                mat-raised-button
-                color="primary"
-                class="edit-button"
-                [routerLink]="['/trainer/courses', course.id, 'edit']"
-                (click)="$event.stopPropagation()">
-                Edit
-              </a>
+              <div class="card-actions">
+                <!-- Prevent card click (detail view) when the edit button is clicked -->
+                <a
+                  mat-raised-button
+                  color="primary"
+                  class="edit-button"
+                  [routerLink]="['/trainer/courses', course.id, 'edit']"
+                  (click)="$event.stopPropagation()">
+                  Edit
+                </a>
+
+                <!-- Prevent card click (detail view) when the delete button is clicked -->
+                <button
+                  mat-stroked-button
+                  class="delete-button"
+                  type="button"
+                  (click)="$event.stopPropagation(); deleteCourse(course.id)">
+                  Delete
+                </button>
+              </div>
 
               <!-- Visual hint that the card opens the detail page -->
               <span class="details-link">Details</span>

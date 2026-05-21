@@ -74,6 +74,15 @@ export class CourseStore {
   }
 
   /**
+   * Delete one course by its ID.
+   */
+  delete(id: number): Observable<any> {
+    return this.http.delete(`${this.api}/courses/${id}`)
+      .pipe(retry(3))
+      .pipe(catchError(this.errorHandler));
+  }
+
+  /**
    * Handle HTTP errors of this service.
    * The error is passed on so the calling component
    * can react to it if needed.
