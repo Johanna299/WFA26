@@ -42,6 +42,38 @@ export class CourseStore {
   }
 
   /**
+   * Create a new course in the backend.
+   */
+  create(courseData: {
+    title: string;
+    description: string | null;
+    location: string;
+    participant_limit: number;
+    difficulty_id: number;
+    category_ids: number[];
+  }): Observable<Course> {
+    return this.http.post<Course>(`${this.api}/courses`, courseData)
+      .pipe(retry(3))
+      .pipe(catchError(this.errorHandler));
+  }
+
+  /**
+   * Update an existing course in the backend.
+   */
+  update(id: number, courseData: {
+    title: string;
+    description: string | null;
+    location: string;
+    participant_limit: number;
+    difficulty_id: number;
+    category_ids: number[];
+  }): Observable<Course> {
+    return this.http.put<Course>(`${this.api}/courses/${id}`, courseData)
+      .pipe(retry(3))
+      .pipe(catchError(this.errorHandler));
+  }
+
+  /**
    * Handle HTTP errors of this service.
    * The error is passed on so the calling component
    * can react to it if needed.

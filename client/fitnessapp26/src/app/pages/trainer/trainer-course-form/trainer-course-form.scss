@@ -1,0 +1,107 @@
+/* Main page container */
+.course-form-page {
+  padding: 24px 16px 40px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Main form card */
+.form-card {
+  border-radius: 24px;
+}
+
+/* Card title */
+.form-title {
+  display: block;
+  padding: 24px 24px 0;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* Card content spacing */
+.form-card mat-card-content {
+  padding: 24px;
+}
+
+/* Vertical form layout */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Full width form fields */
+.full-width {
+  width: 100%;
+}
+
+/* Categories section */
+.categories-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Small section title inside the form */
+.section-heading {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* Responsive category checkbox layout */
+.category-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+/* Validation message below the category section */
+.category-error {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #c62828;
+}
+
+/* Action buttons at the bottom of the form */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+/* Two-column category layout on larger screens */
+@media (min-width: 700px) {
+  .category-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Slightly larger spacing on wide screens */
+@media (min-width: 1024px) {
+  .course-form-page {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .form-card mat-card-content {
+    padding: 32px;
+  }
+
+  .form-title {
+    padding-left: 32px;
+    padding-right: 32px;
+    font-size: 2.2rem;
+  }
+}
+
+/* Stack action buttons on small screens */
+@media (max-width: 640px) {
+  .form-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
