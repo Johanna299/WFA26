@@ -101,10 +101,29 @@ class AppointmentController extends Controller
             'status' => 'sometimes|required|in:scheduled,cancelled,finished',
         ]);
 
-        // Prevent editing appointments that have already started or are in the past.
-        if ($appointment->starts_at <= now()) {
+        // Check whether core appointment fields were changed.
+        $courseChanged = $request->has('course_id') && (int) $request->course_id !== (int) $appointment->course_id;
+        $durationChanged = $request->has('duration') && (int) $request->duration !== (int) $appointment->duration;
+
+        // Compare both date values as timestamps so different string formats
+        // still count as the same appointment time.
+        $startsAtChanged =
+            $request->has('starts_at') &&
+            strtotime($request->starts_at) !== strtotime($appointment->starts_at);
+
+        // For appointments that already started or are in the past,
+        // only the status may still be changed.
+        if ($appointment->starts_at <= now() && ($courseChanged || $durationChanged || $startsAtChanged)) {
             return response()->json(
-                'appointment cannot be updated because it has already started or is in the past',
+                'past appointments can only be updated in their status',
+                422
+            );
+        }
+
+        // Prevent updating an appointment to a date or time in the past.
+        if ($startsAtChanged && strtotime($request->starts_at) <= time()) {
+            return response()->json(
+                'appointment cannot be updated to a past date or time',
                 422
             );
         }

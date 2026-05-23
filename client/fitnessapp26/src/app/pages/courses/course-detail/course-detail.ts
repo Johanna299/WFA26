@@ -12,6 +12,7 @@ import { BookingStore } from '../../../shared/services/booking-store';
 import { Authentication } from '../../../shared/services/authentication';
 import { Appointment } from '../../../shared/appointment';
 import { ToastrService } from 'ngx-toastr';
+import { AppointmentStore } from '../../../shared/services/appointment-store';
 
 @Component({
   selector: 'fa-course-detail',
@@ -35,6 +36,9 @@ export class CourseDetail implements OnInit{
 
   // Inject the booking store to create new bookings.
   private bookingStore = inject(BookingStore);
+
+  // Inject the appointment store to manage trainer appointments.
+  private appointmentStore = inject(AppointmentStore);
 
   // Inject the authentication service to check the current login state and role.
   private authService = inject(Authentication);
@@ -104,12 +108,97 @@ export class CourseDetail implements OnInit{
   }
 
   /**
+   * Return whether the logged-in trainer owns the currently displayed course.
+   * Only the trainer of this course should see appointment management actions
+   */
+  protected isOwnCourseTrainer(): boolean {
+    const c = this.course();
+    const currentUserId = this.authService.getUserId();
+
+    if (!c) {
+      return false;
+    }
+
+    return this.isTrainer() && currentUserId === c.trainer_id;
+  }
+
+
+  /**
    * Return whether the current user is allowed to book this appointment.
    * - the user must be logged in and a participant
    * - only appointments with status "scheduled" can be booked
    */
   protected canBookAppointment(appointment: Appointment): boolean {
     return this.isParticipant() && appointment.status === 'scheduled';
+  }
+
+  /**
+   * Navigate to the trainer appointment form for creating a new appointment
+   */
+  protected addAppointment(): void {
+    const c = this.course();
+
+    if (!c) {
+      return;
+    }
+
+    // course ID is passed as query parameter so the form already knows
+    // for which course the appointment should be created
+    this.router.navigate(['/trainer/appointments/new'], {
+      queryParams: { courseId: c.id }
+    });
+  }
+
+  /**
+   * Delete one appointment after user confirmation.
+   * Reload the current page after a successful delete.
+   */
+  protected deleteAppointment(appointmentId: number): void {
+    const confirmed = confirm('Do you really want to delete this appointment?');
+
+    if (!confirmed) {
+      return;
+    }
+
+    this.appointmentStore.delete(appointmentId).subscribe({
+      next: () => {
+        // Show a short success message after the appointment was deleted.
+        this.toastr.success('Appointment deleted successfully.');
+
+        // Reload the current course detail page so the appointment list is refreshed.
+        // First navigate away internally and then back to the current course detail route
+        // to force the component to reload
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this.router.navigate(['/courses', this.course()?.id]);
+        });
+      },
+      error: (error) => {
+        console.error('Deleting appointment failed', error);
+        const backendMessage = error?.error;
+
+        if (backendMessage === 'appointment cannot be deleted because bookings still exist') {
+          this.toastr.error('Cannot delete appointment with bookings.', 'Error');
+          return;
+        }
+
+        if (backendMessage === 'appointment cannot be deleted because it has already started or is in the past') {
+          this.toastr.error('Past appointments cannot be deleted.', 'Error');
+          return;
+        }
+
+        if (backendMessage === 'you are not allowed to delete this appointment') {
+          this.toastr.error('You cannot delete this appointment.', 'Error');
+          return;
+        }
+
+        if (backendMessage === 'only trainers can delete appointments') {
+          this.toastr.error('Only trainers can delete appointments.', 'Error');
+          return;
+        }
+
+        this.toastr.error('Appointment could not be deleted.', 'Error');
+      }
+    });
   }
 
   /**
@@ -154,7 +243,7 @@ export class CourseDetail implements OnInit{
         if (backendMessage === 'booking failed: user already has a booking for this appointment') {
           this.toastr.error(
             'You cannot book this appointment again.',
-            'Booking error'
+            'Error'
           );
           return;
         }

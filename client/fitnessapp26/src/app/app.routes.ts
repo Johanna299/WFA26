@@ -6,6 +6,7 @@ import { Login } from './pages/login/login';
 import { BookingList } from './pages/bookings/booking-list/booking-list';
 import { TrainerCourseList } from './pages/trainer/trainer-course-list/trainer-course-list';
 import { TrainerCourseForm } from './pages/trainer/trainer-course-form/trainer-course-form';
+import { TrainerAppointmentForm } from './pages/trainer/trainer-appointment-form/trainer-appointment-form';
 
 export const routes: Routes = [
   // Redirect the root URL to the home page.
@@ -36,6 +37,13 @@ export const routes: Routes = [
   // Trainer page for editing an existing course.
   // The route parameter ":id" contains the ID of the course to edit.
   { path: 'trainer/courses/:id/edit', component: TrainerCourseForm },
+
+  // Trainer page for creating a new appointment.
+  { path: 'trainer/appointments/new', component: TrainerAppointmentForm },
+
+  // Trainer page for editing an existing appointment.
+  // The route parameter ":id" contains the ID of the appointment to edit.
+  { path: 'trainer/appointments/:id/edit', component: TrainerAppointmentForm },
 
   // Fallback route: redirect unknown URLs to the home page.
   { path: '**', redirectTo: 'home' }

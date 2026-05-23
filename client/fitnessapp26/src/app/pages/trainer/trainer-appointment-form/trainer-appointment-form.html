@@ -1,0 +1,74 @@
+<section class="appointment-form-page">
+  <mat-card class="form-card">
+    <mat-card-title class="form-title">{{ getFormTitle() }}</mat-card-title>
+
+    <mat-card-content>
+      <form [formGroup]="appointmentForm" class="form-container" (ngSubmit)="submitForm()">
+        <!-- Start date and time -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Start date and time</mat-label>
+          <input
+            matInput
+            type="datetime-local"
+            formControlName="starts_at"
+            (blur)="markFieldAsTouched('starts_at')">
+          @if (errors['starts_at']) {
+            <mat-error>{{ errors['starts_at'] }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Duration -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Duration in minutes</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="duration"
+            (blur)="markFieldAsTouched('duration')">
+          @if (errors['duration']) {
+            <mat-error>{{ errors['duration'] }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Status is only editable field for past appointments in update mode -->
+        @if (isUpdatingAppointment() && isPastAppointment()) {
+          <p class="form-hint">
+            This appointment is in the past. Only the status can still be changed.
+          </p>
+        }
+        @if (isUpdatingAppointment()) {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Status</mat-label>
+            <mat-select
+              formControlName="status"
+              (selectionChange)="markFieldAsTouched('status')">
+              <mat-option value="scheduled">Scheduled</mat-option>
+              <mat-option value="cancelled">Cancelled</mat-option>
+              <mat-option value="finished">Finished</mat-option>
+            </mat-select>
+            @if (errors['status']) {
+              <mat-error>{{ errors['status'] }}</mat-error>
+            }
+          </mat-form-field>
+        }
+
+        <!-- Form actions -->
+        <div class="form-actions">
+          <a
+            mat-stroked-button
+            [routerLink]="getCancelLink()">
+            Cancel
+          </a>
+
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="appointmentForm.invalid">
+            {{ getSubmitLabel() }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</section>

@@ -76,7 +76,19 @@
 
         <!-- Appointments -->
         <section class="detail-section">
-          <h2 class="section-title">Appointments</h2>
+          <div class="section-header">
+            <h2 class="section-title">Appointments</h2>
+
+            @if (isOwnCourseTrainer()) {
+              <button
+                mat-raised-button
+                color="primary"
+                class="add-appointment-button"
+                (click)="addAppointment()">
+                ➕ Add appointment
+              </button>
+            }
+          </div>
 
           @if (c.appointments && c.appointments.length) {
             <div class="appointment-list">
@@ -107,6 +119,26 @@
                       {{ appointment.status }}
                     </span>
                   </div>
+
+                  @if (isOwnCourseTrainer()) {
+                    <div class="appointment-actions">
+                      <a
+                        mat-raised-button
+                        color="primary"
+                        class="appointment-action-button"
+                        [routerLink]="['/trainer/appointments', appointment.id, 'edit']">
+                        Edit
+                      </a>
+
+                      <button
+                        mat-stroked-button
+                        class="appointment-delete-button"
+                        type="button"
+                        (click)="deleteAppointment(appointment.id)">
+                        Delete
+                      </button>
+                    </div>
+                  }
 
                   <!-- Show the booking button only for logged-in participants and scheduled appointments -->
                   @if (canBookAppointment(appointment)) {

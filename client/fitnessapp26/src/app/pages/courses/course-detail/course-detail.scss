@@ -187,6 +187,45 @@
     justify-content: space-between;
     align-items: center;
   }
+
+  /* Header row for section title and action button */
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+
+  /* Group trainer actions for one appointment */
+  .appointment-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Keep action buttons above the clickable card layout if needed */
+  .appointment-action-button,
+  .appointment-delete-button {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Style the delete action as a soft destructive button */
+  .appointment-delete-button {
+    background-color: rgba(198, 40, 40, 0.10) !important;
+    color: #c62828 !important;
+    border: 1px solid rgba(198, 40, 40, 0.25) !important;
+    box-shadow: none !important;
+  }
+
+  .appointment-delete-button .mdc-button__label {
+    color: #c62828 !important;
+  }
+
+  .appointment-delete-button:hover {
+    background-color: rgba(198, 40, 40, 0.16) !important;
+    border-color: rgba(198, 40, 40, 0.35) !important;
+  }
 }
 
 /* Larger spacing on wide screens */
@@ -202,5 +241,26 @@
 
   .course-title {
     font-size: 2.4rem;
+  }
+
+  /* Stack section header and trainer actions on smaller screens */
+  @media (max-width: 640px) {
+    .section-header {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .appointment-actions {
+      flex-direction: column;
+      align-items: stretch;
+      width: 100%;
+    }
+
+    .appointment-actions a,
+    .appointment-actions button,
+    .add-appointment-button {
+      width: 100%;
+      text-align: center;
+    }
   }
 }
