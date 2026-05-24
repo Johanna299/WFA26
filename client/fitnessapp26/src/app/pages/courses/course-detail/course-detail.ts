@@ -71,6 +71,9 @@ export class CourseDetail implements OnInit{
   // object key is appointment ID, value is the array of bookings for that appointment
   participantBookings = signal<Record<number, Booking[]>>({});
 
+  // Store from which page the user opened the course detail page
+  source = signal<string>('courses');
+
   constructor() {
     effect(() => {
       const course = this.course();
@@ -89,6 +92,17 @@ export class CourseDetail implements OnInit{
   }
 
   ngOnInit(): void {
+    // Read the optional source parameter from the URL to see whether the
+    // user came from the public course list or from the trainer course list
+    const source = this.route.snapshot.queryParamMap.get('source');
+    if (source) {
+      this.source.set(source);
+    }
+
+    if (source) {
+      this.source.set(source);
+    }
+
     // Check whether the page was opened with a booking error message.
     const bookingError = this.route.snapshot.queryParamMap.get('bookingError');
 
@@ -147,17 +161,20 @@ export class CourseDetail implements OnInit{
     return this.isTrainer() && currentUserId === c.trainer_id;
   }
 
+  /**
+   * Return the correct back route depending on where the user opened the detail page.
+   */
+  protected getBackLink(): string {
+    return this.source() === 'trainer-courses' ? '/trainer/courses' : '/courses';
+  }
 
   /**
-   * Return whether the current user is allowed to book this appointment.
-   * - the user must be logged in and a participant
-   * - only appointments with status "scheduled" can be booked
-   * - fully booked appointments cannot be booked
+   * Return the correct back button label depending on where the user opened the detail page
    */
-  protected canBookAppointment(appointment: Appointment): boolean {
-    return this.isParticipant()
-      && appointment.status === 'scheduled'
-      && !this.isFullyBooked(appointment);
+  protected getBackLabel(): string {
+    return this.source() === 'trainer-courses'
+      ? 'Back to my courses'
+      : 'Back to course list';
   }
 
   /**
@@ -312,6 +329,23 @@ export class CourseDetail implements OnInit{
     }
 
     return this.getActiveBookingCount(appointment) >= course.participant_limit;
+  }
+
+  /**
+   * Return true if the current logged-in user already has a booking
+   * for this appointment, regardless of the booking status
+   */
+  protected hasCurrentUserBooking(appointment: Appointment): boolean {
+    const currentUserId = this.authService.getUserId();
+
+    if (!currentUserId) {
+      return false;
+    }
+
+    const bookings =
+      this.participantBookings()[appointment.id] ?? appointment.bookings ?? [];
+
+    return bookings.some((booking) => booking.user_id === currentUserId);
   }
 
   /**

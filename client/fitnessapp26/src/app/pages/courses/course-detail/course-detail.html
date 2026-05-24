@@ -4,9 +4,9 @@
       <mat-card-content>
         <!-- Back button -->
         <div class="action-row">
-          <button mat-raised-button color="primary" [routerLink]="'/courses'">
+          <button mat-raised-button color="primary" [routerLink]="getBackLink()">
             <mat-icon>arrow_back</mat-icon>
-            Back to course list
+            {{ getBackLabel() }}
           </button>
         </div>
 
@@ -147,10 +147,9 @@
                       <!-- Book button -->
                       @if (isParticipant() && appointment.status === 'scheduled') {
                         <div class="booking-action-area">
-                          <!-- disable button if fully booked -->
-                          @if (isFullyBooked(appointment)) {
-                            <span class="fully-booked-badge">Fully booked</span>
-
+                          <!-- user has already booked this appointment -->
+                          @if (hasCurrentUserBooking(appointment)) {
+                            <span class="already-booked-badge">Already booked</span>
                             <button
                               mat-raised-button
                               color="primary"
@@ -160,9 +159,20 @@
                               <mat-icon>event_busy</mat-icon>
                               Book
                             </button>
-                          }
-                          @else {
-                            <!-- normal button -->
+                          } @else if (isFullyBooked(appointment)) {
+                            <!-- appointment is fully booked -->
+                            <span class="fully-booked-badge">Fully booked</span>
+                            <button
+                              mat-raised-button
+                              color="primary"
+                              class="book-button"
+                              type="button"
+                              [disabled]="true">
+                              <mat-icon>event_busy</mat-icon>
+                              Book
+                            </button>
+                          } @else {
+                            <!-- book appointment -->
                             <button
                               mat-raised-button
                               color="primary"

@@ -20,7 +20,9 @@
     <!-- track course.id: Use the course ID as a stable unique key so Angular can update the list efficiently. -->
       @for (course of courses(); track course.id) {
         <!-- One course card -->
-        <mat-card class="course-card" [routerLink]="['/courses', course.id]">
+        <mat-card class="course-card"
+                  [routerLink]="['/courses', course.id]"
+                  [queryParams]="{ source: 'courses' }">
           <mat-card-content>
             <!-- Title and difficulty -->
             <div class="card-top">

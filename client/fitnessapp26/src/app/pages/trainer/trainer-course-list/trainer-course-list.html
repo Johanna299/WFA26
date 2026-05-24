@@ -29,7 +29,9 @@
       <!-- Track each course by its ID so Angular can recognize list items when the data changes. -->
       @for (course of trainerCourses(); track course.id) {
         <!-- The full card opens the public course detail page -->
-        <mat-card class="course-card" [routerLink]="['/courses', course.id]">
+        <mat-card class="course-card"
+                  [routerLink]="['/courses', course.id]"
+                  [queryParams]="{ source: 'trainer-courses' }">
           <mat-card-content>
             <!-- Title and difficulty -->
             <div class="card-top">
