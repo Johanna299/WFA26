@@ -1,6 +1,4 @@
-@let c = course();
-
-@if (c) {
+@if (course(); as c) {
   <section class="course-detail-page">
     <mat-card class="detail-card">
       <mat-card-content>
@@ -147,15 +145,34 @@
                       }
 
                       <!-- Book button -->
-                      @if (canBookAppointment(appointment)) {
-                        <button
-                          mat-raised-button
-                          color="primary"
-                          class="book-button"
-                          (click)="bookAppointment(appointment.id)">
-                          <mat-icon>event_available</mat-icon>
-                          Book
-                        </button>
+                      @if (isParticipant() && appointment.status === 'scheduled') {
+                        <div class="booking-action-area">
+                          <!-- disable button if fully booked -->
+                          @if (isFullyBooked(appointment)) {
+                            <span class="fully-booked-badge">Fully booked</span>
+
+                            <button
+                              mat-raised-button
+                              color="primary"
+                              class="book-button"
+                              type="button"
+                              [disabled]="true">
+                              <mat-icon>event_busy</mat-icon>
+                              Book
+                            </button>
+                          }
+                          @else {
+                            <!-- normal button -->
+                            <button
+                              mat-raised-button
+                              color="primary"
+                              class="book-button"
+                              (click)="bookAppointment(appointment.id)">
+                              <mat-icon>event_available</mat-icon>
+                              Book
+                            </button>
+                          }
+                        </div>
                       }
 
                       @if (!isLoggedIn() && appointment.status === 'scheduled') {

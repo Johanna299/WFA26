@@ -265,6 +265,24 @@
   margin-bottom: 28px;
 }
 
+/* Wrap the booking button and the fully booked hint */
+.booking-action-area {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Small status badge for fully booked appointments */
+.fully-booked-badge {
+  width: fit-content;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: rgba(198, 40, 40, 0.10);
+  color: #c62828;
+}
+
 /* Two-column layout for larger screens */
 @media (min-width: 768px) {
   .title-block {

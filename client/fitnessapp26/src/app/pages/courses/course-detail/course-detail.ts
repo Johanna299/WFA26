@@ -75,9 +75,8 @@ export class CourseDetail implements OnInit{
     effect(() => {
       const course = this.course();
 
-      // Stop if no course data is loaded yet or if the current user
-      // is not the trainer of this course
-      if (!course || !this.isOwnCourseTrainer() || !course.appointments?.length) {
+      // Stop if no course data is loaded yet
+      if (!course || !course.appointments?.length) {
         return;
       }
 
@@ -153,9 +152,12 @@ export class CourseDetail implements OnInit{
    * Return whether the current user is allowed to book this appointment.
    * - the user must be logged in and a participant
    * - only appointments with status "scheduled" can be booked
+   * - fully booked appointments cannot be booked
    */
   protected canBookAppointment(appointment: Appointment): boolean {
-    return this.isParticipant() && appointment.status === 'scheduled';
+    return this.isParticipant()
+      && appointment.status === 'scheduled'
+      && !this.isFullyBooked(appointment);
   }
 
   /**
@@ -296,6 +298,20 @@ export class CourseDetail implements OnInit{
    */
   protected getActiveBookingCount(appointment: Appointment): number {
     return this.getActiveBookings(appointment).length;
+  }
+
+  /**
+   * Return true if the appointment has already reached the course participant limit.
+   * Only active bookings with status "booked" are counted
+   */
+  protected isFullyBooked(appointment: Appointment): boolean {
+    const course = this.course();
+
+    if (!course) {
+      return false;
+    }
+
+    return this.getActiveBookingCount(appointment) >= course.participant_limit;
   }
 
   /**
