@@ -7,6 +7,8 @@ import { BookingList } from './pages/bookings/booking-list/booking-list';
 import { TrainerCourseList } from './pages/trainer/trainer-course-list/trainer-course-list';
 import { TrainerCourseForm } from './pages/trainer/trainer-course-form/trainer-course-form';
 import { TrainerAppointmentForm } from './pages/trainer/trainer-appointment-form/trainer-appointment-form';
+import { canNavigateToTrainerGuard } from './shared/can-navigate-to-trainer-guard';
+import { canNavigateToParticipantGuard } from './shared/can-navigate-to-participant-guard';
 
 export const routes: Routes = [
   // Redirect the root URL to the home page.
@@ -25,25 +27,25 @@ export const routes: Routes = [
   // Login page for trainers and participants.
   { path: 'login', component: Login },
 
-  // Page that shows the bookings of the currently logged-in participant.
-  { path: 'bookings', component: BookingList },
+  // Participant-only page that shows the bookings of the currently logged-in participant.
+  { path: 'bookings', component: BookingList, canActivate: [canNavigateToParticipantGuard] },
 
-  // Trainer page that shows all courses of the currently logged-in trainer.
-  { path: 'trainer/courses', component: TrainerCourseList },
+  // Trainer-only page that shows all courses of the currently logged-in trainer.
+  { path: 'trainer/courses', component: TrainerCourseList, canActivate: [canNavigateToTrainerGuard] },
 
-  // Trainer page for creating a new course.
-  { path: 'trainer/courses/new', component: TrainerCourseForm },
+  // Trainer-only page for creating a new course.
+  { path: 'trainer/courses/new', component: TrainerCourseForm, canActivate: [canNavigateToTrainerGuard] },
 
-  // Trainer page for editing an existing course.
+  // Trainer-only page for editing an existing course.
   // The route parameter ":id" contains the ID of the course to edit.
-  { path: 'trainer/courses/:id/edit', component: TrainerCourseForm },
+  { path: 'trainer/courses/:id/edit', component: TrainerCourseForm, canActivate: [canNavigateToTrainerGuard] },
 
-  // Trainer page for creating a new appointment.
-  { path: 'trainer/appointments/new', component: TrainerAppointmentForm },
+  // Trainer-only page for creating a new appointment.
+  { path: 'trainer/appointments/new', component: TrainerAppointmentForm, canActivate: [canNavigateToTrainerGuard] },
 
-  // Trainer page for editing an existing appointment.
+  // Trainer-only page for editing an existing appointment.
   // The route parameter ":id" contains the ID of the appointment to edit.
-  { path: 'trainer/appointments/:id/edit', component: TrainerAppointmentForm },
+  { path: 'trainer/appointments/:id/edit', component: TrainerAppointmentForm, canActivate: [canNavigateToTrainerGuard] },
 
   // Fallback route: redirect unknown URLs to the home page.
   { path: '**', redirectTo: 'home' }
