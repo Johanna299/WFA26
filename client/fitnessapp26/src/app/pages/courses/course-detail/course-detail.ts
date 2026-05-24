@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { switchMap } from 'rxjs';
@@ -11,6 +11,7 @@ import { DatePipe } from '@angular/common';
 import { BookingStore } from '../../../shared/services/booking-store';
 import { Authentication } from '../../../shared/services/authentication';
 import { Appointment } from '../../../shared/appointment';
+import { Booking } from '../../../shared/booking';
 import { ToastrService } from 'ngx-toastr';
 import { AppointmentStore } from '../../../shared/services/appointment-store';
 
@@ -62,6 +63,31 @@ export class CourseDetail implements OnInit{
     ),
     { initialValue: null }
   );
+
+  // Store which appointment IDs are currently expanded in the UI
+  expandedAppointments = signal<number[]>([]);
+
+  // Store the loaded bookings for each appointment.
+  // object key is appointment ID, value is the array of bookings for that appointment
+  participantBookings = signal<Record<number, Booking[]>>({});
+
+  constructor() {
+    effect(() => {
+      const course = this.course();
+
+      // Stop if no course data is loaded yet or if the current user
+      // is not the trainer of this course
+      if (!course || !this.isOwnCourseTrainer() || !course.appointments?.length) {
+        return;
+      }
+
+      // Preload the bookings for all appointments once so the booking count
+      // is already available
+      for (const appointment of course.appointments) {
+        this.loadParticipantBookings(appointment.id);
+      }
+    });
+  }
 
   ngOnInit(): void {
     // Check whether the page was opened with a booking error message.
@@ -250,6 +276,80 @@ export class CourseDetail implements OnInit{
 
         // Fallback message for all other booking errors.
         this.toastr.error('Booking error');
+      }
+    });
+  }
+
+  /**
+   * Return all active participant bookings for one appointment.
+   * Only bookings with status "booked" are returned
+   */
+  protected getActiveBookings(appointment: Appointment): Booking[] {
+    // Use loaded bookings if available, otherwise fall back to the appointment data or an empty array
+    const loadedBookings = this.participantBookings()[appointment.id] ?? appointment.bookings ?? [];
+
+    return loadedBookings.filter((booking) => booking.status === 'booked');
+  }
+
+  /**
+   * Return the number of active bookings for one appointment
+   */
+  protected getActiveBookingCount(appointment: Appointment): number {
+    return this.getActiveBookings(appointment).length;
+  }
+
+  /**
+   * Return whether the participant section of one appointment is currently expanded.
+   */
+  protected isParticipantsExpanded(appointmentId: number): boolean {
+    return this.expandedAppointments().includes(appointmentId);
+  }
+
+  /**
+   * Expand or collapse the participant section of one appointment.
+   * Make sure the bookings are loaded before showing the participant names.
+   */
+  protected toggleParticipants(appointmentId: number): void {
+    const expandedIds = this.expandedAppointments();
+
+    // Collapse the section if it is already open
+    if (expandedIds.includes(appointmentId)) {
+      this.expandedAppointments.set(
+        expandedIds.filter((id) => id !== appointmentId)
+      );
+      return;
+    }
+
+    // Ensure the participant bookings are available.
+    this.loadParticipantBookings(appointmentId);
+
+    // Expand the selected appointment section.
+    this.expandedAppointments.set([...expandedIds, appointmentId]);
+  }
+
+  /**
+   * Load the participant bookings for one appointment once.
+   * Skip the request if the bookings for this appointment were already loaded before.
+   */
+  private loadParticipantBookings(appointmentId: number): void {
+    // Stop if bookings for this appointment are already stored locally.
+    if (this.participantBookings()[appointmentId]) {
+      return;
+    }
+
+    // Load the appointment details for the selected appointment ID
+    this.appointmentStore.getSingle(appointmentId).subscribe({
+      next: (appointment) => {
+        // Update the local participantBookings signal with the newly loaded bookings.
+        // currentBookings:  all bookings that were already loaded for other appointments
+        // spread operator keeps entries and only adds the bookings for the currently opened appointment
+        this.participantBookings.update((currentBookings) => ({
+          ...currentBookings,
+          [appointmentId]: appointment.bookings ?? []
+        }));
+      },
+      error: (error) => {
+        console.error('Loading appointment participants failed', error);
       }
     });
   }

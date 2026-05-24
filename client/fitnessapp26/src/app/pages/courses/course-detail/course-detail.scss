@@ -59,6 +59,14 @@
   gap: 12px;
 }
 
+/* Header row for section title and action button */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
 /* Section headline */
 .section-title {
   margin: 0;
@@ -126,10 +134,17 @@
 .appointment-item {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
   padding: 14px 16px;
   border-radius: 16px;
   background: rgba(0, 0, 0, 0.04);
+}
+
+/* Top row inside one appointment card */
+.appointment-top-row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 /* Main appointment information */
@@ -137,6 +152,13 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+
+/* Right column for trainer and booking actions */
+.appointment-right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 /* Appointment date styling */
@@ -157,6 +179,77 @@
   border-radius: 999px;
   font-size: 0.85rem;
   background: rgba(0, 0, 0, 0.06);
+}
+
+/* Group trainer actions for one appointment */
+.appointment-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Keep action buttons above the clickable card layout if needed */
+.appointment-action-button,
+.appointment-delete-button {
+  position: relative;
+  z-index: 1;
+}
+
+/* Style the delete action as a soft destructive button */
+.appointment-delete-button {
+  background-color: rgba(198, 40, 40, 0.10) !important;
+  color: #c62828 !important;
+  border: 1px solid rgba(198, 40, 40, 0.25) !important;
+  box-shadow: none !important;
+}
+
+.appointment-delete-button .mdc-button__label {
+  color: #c62828 !important;
+}
+
+.appointment-delete-button:hover {
+  background-color: rgba(198, 40, 40, 0.16) !important;
+  border-color: rgba(198, 40, 40, 0.35) !important;
+}
+
+/* Accordion area below the appointment row */
+.participant-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Full-width accordion toggle button */
+.participant-accordion-toggle {
+  width: 100%;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+/* Panel that appears after expanding the participant section */
+.participant-panel {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.03);
+}
+
+/* Vertical list of participant names */
+.participant-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* One participant row */
+.participant-item {
+  font-size: 0.95rem;
+}
+
+/* Empty-state message for appointments without active bookings */
+.participant-empty {
+  margin: 0;
+  font-size: 0.95rem;
+  opacity: 0.75;
 }
 
 /* Message shown if no appointments exist */
@@ -182,49 +275,14 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .appointment-item {
+  .appointment-top-row {
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
   }
 
-  /* Header row for section title and action button */
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-  }
-
-  /* Group trainer actions for one appointment */
-  .appointment-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  /* Keep action buttons above the clickable card layout if needed */
-  .appointment-action-button,
-  .appointment-delete-button {
-    position: relative;
-    z-index: 1;
-  }
-
-  /* Style the delete action as a soft destructive button */
-  .appointment-delete-button {
-    background-color: rgba(198, 40, 40, 0.10) !important;
-    color: #c62828 !important;
-    border: 1px solid rgba(198, 40, 40, 0.25) !important;
-    box-shadow: none !important;
-  }
-
-  .appointment-delete-button .mdc-button__label {
-    color: #c62828 !important;
-  }
-
-  .appointment-delete-button:hover {
-    background-color: rgba(198, 40, 40, 0.16) !important;
-    border-color: rgba(198, 40, 40, 0.35) !important;
+  .appointment-right-column {
+    align-items: flex-end;
   }
 }
 
@@ -242,25 +300,26 @@
   .course-title {
     font-size: 2.4rem;
   }
+}
 
-  /* Stack section header and trainer actions on smaller screens */
-  @media (max-width: 640px) {
-    .section-header {
-      flex-direction: column;
-      align-items: stretch;
-    }
+/* Stack layout and action areas on small screens */
+@media (max-width: 640px) {
+  .section-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-    .appointment-actions {
-      flex-direction: column;
-      align-items: stretch;
-      width: 100%;
-    }
+  .appointment-actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
 
-    .appointment-actions a,
-    .appointment-actions button,
-    .add-appointment-button {
-      width: 100%;
-      text-align: center;
-    }
+  .appointment-actions a,
+  .appointment-actions button,
+  .add-appointment-button,
+  .book-button {
+    width: 100%;
+    text-align: center;
   }
 }

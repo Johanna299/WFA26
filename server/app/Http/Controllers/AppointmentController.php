@@ -17,7 +17,7 @@ class AppointmentController extends Controller
         // Eager load related models because relationships are not included automatically.
         $appointments = Appointment::with([
             'course',
-            'bookings',
+            'bookings.user',
         ])->get();
 
         return response()->json($appointments, 200);
@@ -31,7 +31,7 @@ class AppointmentController extends Controller
         // Eager load related models because relationships are not included automatically.
         $appointment->load([
             'course',
-            'bookings',
+            'bookings.user',
         ]);
 
         return response()->json($appointment, 200);
@@ -71,7 +71,7 @@ class AppointmentController extends Controller
         // Eager load related models because relationships are not included automatically.
         $appointment->load([
             'course',
-            'bookings',
+            'bookings.user',
         ]);
 
         return response()->json($appointment, 201);
@@ -148,7 +148,7 @@ class AppointmentController extends Controller
 
         $appointment->load([
             'course',
-            'bookings',
+            'bookings.user',
         ]);
 
         return response()->json($appointment, 200);

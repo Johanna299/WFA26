@@ -95,73 +95,111 @@
               <!-- Use the appointment ID as a stable unique key for efficient DOM updates. -->
               @for (appointment of c.appointments; track appointment.id) {
                 <div class="appointment-item">
-                  <div class="appointment-main">
-                    <div class="appointment-details">
-                      <div class="appointment-detail">
-                        <span class="appointment-label">Date: </span>
-                        <!-- Format the raw backend date into a readable date string using Angular's date pipe. -->
-                        <span class="appointment-value">{{ appointment.starts_at | date:'longDate' }}</span>
+                  <div class="appointment-top-row">
+                    <div class="appointment-main">
+                      <div class="appointment-details">
+                        <!-- Date -->
+                        <div class="appointment-detail">
+                          <span class="appointment-label">Date: </span>
+                          <span class="appointment-value">{{ appointment.starts_at | date:'longDate' }}</span>
+                        </div>
+
+                        <!-- Time -->
+                        <div class="appointment-detail">
+                          <span class="appointment-label">Time: </span>
+                          <span class="appointment-value">{{ appointment.starts_at | date:'HH:mm' }}</span>
+                        </div>
+
+                        <!-- Duration -->
+                        <div class="appointment-detail">
+                          <span class="appointment-label">Duration: </span>
+                          <span class="appointment-value">{{ appointment.duration }} min</span>
+                        </div>
                       </div>
 
-                      <div class="appointment-detail">
-                        <span class="appointment-label">Time: </span>
-                        <!-- Format the raw backend date into a readable time string using Angular's date pipe. -->
-                        <span class="appointment-value">{{ appointment.starts_at | date:'HH:mm' }}</span>
-                      </div>
-
-                      <div class="appointment-detail">
-                        <span class="appointment-label">Duration: </span>
-                        <span class="appointment-value">{{ appointment.duration }} min</span>
-                      </div>
+                      <!-- Status -->
+                      <span class="appointment-status">
+                        {{ appointment.status }}
+                      </span>
                     </div>
 
-                    <span class="appointment-status">
-                      {{ appointment.status }}
-                    </span>
+                    <!-- Edit button -->
+                    <div class="appointment-right-column">
+                      @if (isOwnCourseTrainer()) {
+                        <div class="appointment-actions">
+                          <a
+                            mat-raised-button
+                            color="primary"
+                            class="appointment-action-button"
+                            [routerLink]="['/trainer/appointments', appointment.id, 'edit']">
+                            Edit
+                          </a>
+
+                          <!-- Delete button -->
+                          <button
+                            mat-stroked-button
+                            class="appointment-delete-button"
+                            type="button"
+                            (click)="deleteAppointment(appointment.id)">
+                            Delete
+                          </button>
+                        </div>
+                      }
+
+                      <!-- Book button -->
+                      @if (canBookAppointment(appointment)) {
+                        <button
+                          mat-raised-button
+                          color="primary"
+                          class="book-button"
+                          (click)="bookAppointment(appointment.id)">
+                          <mat-icon>event_available</mat-icon>
+                          Book
+                        </button>
+                      }
+
+                      @if (!isLoggedIn() && appointment.status === 'scheduled') {
+                        <button
+                          mat-stroked-button
+                          color="primary"
+                          class="book-button"
+                          (click)="bookAppointment(appointment.id)">
+                          <mat-icon>login</mat-icon>
+                          Log in to book
+                        </button>
+                      }
+                    </div>
                   </div>
 
+                  <!-- Details about bookings (only for trainers) -->
                   @if (isOwnCourseTrainer()) {
-                    <div class="appointment-actions">
-                      <a
-                        mat-raised-button
-                        color="primary"
-                        class="appointment-action-button"
-                        [routerLink]="['/trainer/appointments', appointment.id, 'edit']">
-                        Edit
-                      </a>
-
+                    <div class="participant-accordion">
                       <button
                         mat-stroked-button
-                        class="appointment-delete-button"
                         type="button"
-                        (click)="deleteAppointment(appointment.id)">
-                        Delete
+                        class="participant-accordion-toggle"
+                        (click)="toggleParticipants(appointment.id)">
+                        {{ isParticipantsExpanded(appointment.id) ? '▼' : '▶' }}
+                        Bookings: {{ getActiveBookingCount(appointment) }}
+                        {{ isParticipantsExpanded(appointment.id) ? '- Hide participants' : '- Show participants' }}
                       </button>
+
+                      @if (isParticipantsExpanded(appointment.id)) {
+                        <div class="participant-panel">
+                          @if (getActiveBookings(appointment).length) {
+                            <div class="participant-list">
+                              @for (booking of getActiveBookings(appointment); track booking.id) {
+                                <div class="participant-item">
+                                  {{ booking.user.firstname }} {{ booking.user.lastname }}
+                                </div>
+                              }
+                            </div>
+                          } @else {
+                            <p class="participant-empty">No participants yet.</p>
+                          }
+                        </div>
+                      }
                     </div>
-                  }
-
-                  <!-- Show the booking button only for logged-in participants and scheduled appointments -->
-                  @if (canBookAppointment(appointment)) {
-                    <button
-                      mat-raised-button
-                      color="primary"
-                      class="book-button"
-                      (click)="bookAppointment(appointment.id)">
-                      <mat-icon>event_available</mat-icon>
-                      Book
-                    </button>
-                  }
-
-                  <!-- Show a login hint button for logged-out users -->
-                  @if (!isLoggedIn() && appointment.status === 'scheduled') {
-                    <button
-                      mat-stroked-button
-                      color="primary"
-                      class="book-button"
-                      (click)="bookAppointment(appointment.id)">
-                      <mat-icon>login</mat-icon>
-                      Log in to book
-                    </button>
                   }
                 </div>
               }
