@@ -15,6 +15,14 @@ class BookingsTableSeeder extends Seeder
      */
     public function run(): void
     {
+        $participant3 = User::where('email', 'participant3@example.com')
+            ->where('is_trainer', false)
+            ->first();
+
+        $participant4 = User::where('email', 'participant4@example.com')
+            ->where('is_trainer', false)
+            ->first();
+
         $participant1 = User::where('email', 'participant1@example.com')
             ->where('is_trainer', false)
             ->first();
@@ -31,7 +39,7 @@ class BookingsTableSeeder extends Seeder
             ->where('is_trainer', true)
             ->first();
 
-        if (!$participant1 || !$participant2 || !$trainer1 || !$trainer2) {
+        if (!$participant1 || !$participant2 || !$participant3 || !$participant4 || !$trainer1 || !$trainer2) {
             return;
         }
 
@@ -49,7 +57,7 @@ class BookingsTableSeeder extends Seeder
 
         if ($course1) {
             $appointment1 = Appointment::where('course_id', $course1->id)
-                ->where('starts_at', '2026-06-05 09:00:00')
+                ->where('starts_at', '2026-04-05 09:00:00')
                 ->first();
 
             if ($appointment1) {
@@ -66,6 +74,24 @@ class BookingsTableSeeder extends Seeder
                     $booking1->appointment()->associate($appointment1);
 
                     $booking1->save();
+                }
+            }
+
+            $appointment1Future = Appointment::where('course_id', $course1->id)
+                ->where('starts_at', '2026-06-12 09:00:00')
+                ->first();
+
+            if ($appointment1Future) {
+                $booking5 = Booking::where('user_id', $participant4->id)
+                    ->where('appointment_id', $appointment1Future->id)
+                    ->first();
+
+                if (!$booking5) {
+                    $booking5 = new Booking();
+                    $booking5->status = 'booked';
+                    $booking5->user()->associate($participant4);
+                    $booking5->appointment()->associate($appointment1Future);
+                    $booking5->save();
                 }
             }
         }
@@ -112,6 +138,18 @@ class BookingsTableSeeder extends Seeder
                     $booking3->appointment()->associate($appointment3);
 
                     $booking3->save();
+                }
+
+                $booking4 = Booking::where('user_id', $participant3->id)
+                    ->where('appointment_id', $appointment3->id)
+                    ->first();
+
+                if (!$booking4) {
+                    $booking4 = new Booking();
+                    $booking4->status = 'booked';
+                    $booking4->user()->associate($participant3);
+                    $booking4->appointment()->associate($appointment3);
+                    $booking4->save();
                 }
             }
         }

@@ -78,7 +78,7 @@ class CoursesTableSeeder extends Seeder
             $course3->title = 'Evening Mobility Flow';
             $course3->description = 'A mobility-focused course to improve flexibility and posture.';
             $course3->location = 'Studio B';
-            $course3->participant_limit = 8;
+            $course3->participant_limit = 2;
             $course3->difficulty_id = $beginner->id;
 
             // Inverse relation -> use associate for the trainer relation.

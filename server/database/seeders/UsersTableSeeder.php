@@ -59,5 +59,29 @@ class UsersTableSeeder extends Seeder
                 'phone' => null,
             ]
         );
+
+        User::firstOrCreate(
+            ['email' => 'participant3@example.com'],
+            [
+                'firstname' => 'Lena',
+                'lastname' => 'Participant',
+                'password' => bcrypt('secret123'),
+                'is_trainer' => false,
+                'info' => null,
+                'phone' => null,
+            ]
+        );
+
+        User::firstOrCreate(
+            ['email' => 'participant4@example.com'],
+            [
+                'firstname' => 'Max',
+                'lastname' => 'Participant',
+                'password' => bcrypt('secret123'),
+                'is_trainer' => false,
+                'info' => null,
+                'phone' => null,
+            ]
+        );
     }
 }

@@ -19,12 +19,12 @@ class AppointmentsTableSeeder extends Seeder
 
         if ($course1) {
             $appointment1 = Appointment::where('course_id', $course1->id)
-                ->where('starts_at', '2026-06-05 09:00:00')
+                ->where('starts_at', '2026-04-05 09:00:00')
                 ->first();
 
             if (!$appointment1) {
                 $appointment1 = new Appointment();
-                $appointment1->starts_at = '2026-06-05 09:00:00';
+                $appointment1->starts_at = '2026-04-05 09:00:00';
                 $appointment1->duration = 60;
                 $appointment1->status = 'scheduled';
 
@@ -76,7 +76,7 @@ class AppointmentsTableSeeder extends Seeder
                 $appointment4 = new Appointment();
                 $appointment4->starts_at = '2026-06-13 18:00:00';
                 $appointment4->duration = 75;
-                $appointment4->status = 'scheduled';
+                $appointment4->status = 'cancelled';
 
                 // Inverse relation -> use associate for the course relation.
                 $appointment4->course()->associate($course2);
