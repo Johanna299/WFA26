@@ -25,9 +25,6 @@ use Illuminate\Support\Facades\Route;
 //--------------------------------------------------------------------------
 // Auth
 Route::post('auth/login', [AuthController::class, 'login']);
-Route::get('auth/me', [AuthController::class, 'me']);
-Route::post('auth/logout', [AuthController::class, 'logout']);
-Route::post('auth/refresh', [AuthController::class, 'refresh']);
 
 // Courses
 Route::get('courses', [CourseController::class, 'index']);
@@ -51,6 +48,11 @@ Route::get('difficulties/{difficulty}', [DifficultyController::class, 'show']);
 //--------------------------------------------------------------------------
 
 Route::group(['middleware' => ['api','auth.jwt']], function () {
+    // Auth
+    Route::get('auth/me', [AuthController::class, 'me']);
+    Route::post('auth/logout', [AuthController::class, 'logout']);
+    Route::post('auth/refresh', [AuthController::class, 'refresh']);
+
     // Courses
     Route::post('courses', [CourseController::class, 'save']);
     Route::put('courses/{course}', [CourseController::class, 'update']);
