@@ -26,7 +26,7 @@ class AppointmentsTableSeeder extends Seeder
                 $appointment1 = new Appointment();
                 $appointment1->starts_at = '2026-04-05 09:00:00';
                 $appointment1->duration = 60;
-                $appointment1->status = 'scheduled';
+                $appointment1->status = 'finished';
 
                 // Inverse relation -> use associate for the course relation.
                 $appointment1->course()->associate($course1);
