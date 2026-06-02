@@ -75,6 +75,7 @@ export class CourseDetail implements OnInit{
   source = signal<string>('courses');
 
   constructor() {
+    // automatically executes effect() as soon as a signal in this function changes
     effect(() => {
       const course = this.course();
 
@@ -91,14 +92,11 @@ export class CourseDetail implements OnInit{
     });
   }
 
+  //lifecycle hook: Angular automatically calls this method once after the component has been created
   ngOnInit(): void {
     // Read the optional source parameter from the URL to see whether the
     // user came from the public course list or from the trainer course list
     const source = this.route.snapshot.queryParamMap.get('source');
-    if (source) {
-      this.source.set(source);
-    }
-
     if (source) {
       this.source.set(source);
     }

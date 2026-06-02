@@ -1,4 +1,4 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import {Component, effect, inject, OnInit, signal} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
@@ -38,7 +38,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './trainer-course-form.scss',
   standalone: true
 })
-export class TrainerCourseForm {
+export class TrainerCourseForm implements OnInit {
   // Build and manage the reactive form structure.
   private fb = inject(FormBuilder);
 

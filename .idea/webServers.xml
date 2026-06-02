@@ -9,6 +9,13 @@
           </advancedOptions>
         </fileTransfer>
       </webServer>
+      <webServer id="ce6f8d07-215e-4b14-8d86-ceeabe0fdaf8" name="FE_Deployment" url="http://fitflow.s2310456005.student.kwmhgb.at">
+        <fileTransfer rootFolder="/usr/home/lpbjzw/public_html/wfa26" accessType="SFTP" host="s2310456005.student.kwmhgb.at" port="222" sshConfigId="35b0f2ad-3409-4081-a11a-948260bb9aef" sshConfig="lpbjzw@s2310456005.student.kwmhgb.at:222 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
     </option>
   </component>
 </project>
