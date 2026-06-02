@@ -66,8 +66,8 @@ This project was implemented by me as a full-stack web application. My work incl
 
 ### Participant views
 
-![Home for participants](docs/screenshots/participant-home.png)
-![Course details view for participants](docs/screenshots/participant/course-details.png)
+![Home for participants](docs/screenshots/participant/participant-home.png)
+![Course details view for participants](docs/screenshots/participant/participant-course-details.png)
 ![Appointment booking view for participants](docs/screenshots/participant/participant-bookings.png)
 
 ### Trainer views
