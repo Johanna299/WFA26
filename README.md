@@ -59,7 +59,27 @@ This project was implemented by me as a full-stack web application. My work incl
 
 ## Screenshots
 
-Screenshots of the application will be added here.
+## Screenshots
+
+### Public views
+
+
+![Home of FitFlow](docs/screenshots/home.png)
+![Course overview of FitFlow](docs/screenshots/course-overview.png)
+
+### Participant views
+
+![Home for participants](docs/screenshots/participant-home.png)
+![Course details view for participants](docs/screenshots/participant/course-details.png)
+![Appointment booking view for participants](docs/screenshots/participant/participant-bookings.png)
+
+### Trainer views
+
+![Home for trainers](docs/screenshots/trainer/trainer-home.png)
+![Course details view for trainers](docs/screenshots/trainer/trainer-course-details.png)
+![Course management view for trainers](docs/screenshots/trainer/trainer-course-dashboard.png)
+![Course form for trainers](docs/screenshots/trainer/trainer-course-form.png)
+![Appointment form for trainers](docs/screenshots/trainer/trainer-appointment-form.png)
 
 ## Live Demo
 
