@@ -59,10 +59,7 @@ This project was implemented by me as a full-stack web application. My work incl
 
 ## Screenshots
 
-## Screenshots
-
 ### Public views
-
 
 ![Home of FitFlow](docs/screenshots/home.png)
 ![Course overview of FitFlow](docs/screenshots/course-overview.png)
