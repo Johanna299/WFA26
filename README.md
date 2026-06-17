@@ -109,4 +109,4 @@ ng serve
 
 ## Project Context
 
-This application was created for educational purposes as part of a university course "Web Frameworks und Architekturen" and is presented here as part of my web development portfolio.
+This application was created for educational purposes as part of a university course 'Web Frameworks and Architectures'.
