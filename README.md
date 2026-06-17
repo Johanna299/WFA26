@@ -1,6 +1,6 @@
 # FitFlow – Fitness Course Booking Platform
 
-FitFlow is a full-stack web application for managing and booking fitness courses. It was developed as part of the course ‘Web Frameworks and Architectures’ during my Bachelor’s degree in Communication, Knowledge & Media at the University of Applied Sciences Upper Austria, Hagenberg Campus.
+FitFlow is a full-stack web application for managing and booking fitness courses. This project was developed in the 6th semester of my Bachelor’s degree in Communication, Knowledge & Media at the University of Applied Sciences Upper Austria, Hagenberg Campus, as part of the course 'Web Frameworks and Architectures'.
 
 ## About the Project
 
